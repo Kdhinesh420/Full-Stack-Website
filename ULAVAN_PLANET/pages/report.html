@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Issue - ULAVAN PLANET</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fdfbf7;
+            background-image: radial-gradient(#e8f5e9 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #3e2723;
+            line-height: 1.6;
+        }
+
+        /* 🧭 HEADER */
+        .header-nav {
+            background-color: #f1f8e9;
+            /* Mint */
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(46, 125, 50, 0.15);
+            border-top: 5px solid #1b5e20;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            gap: 15px;
+        }
+
+        .logo-circle {
+            width: 45px;
+            height: 45px;
+            background-color: transparent;
+            border-radius: 50%;
+            border: 2px solid #ffca28;
+            object-fit: cover;
+        }
+
+        .logo-section h1 {
+            color: #1b5e20;
+            font-size: 1.6em;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .nav-links a {
+            color: #33691e;
+            text-decoration: none;
+            padding: 8px 16px;
+            margin-left: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover {
+            background-color: #1b5e20;
+            color: white;
+        }
+
+        .main-content {
+            max-width: 800px;
+            background-color: white;
+            padding: 50px;
+            margin: 40px auto;
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(46, 125, 50, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        .report-form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #f1f8e9;
+            padding-bottom: 20px;
+        }
+
+        .report-form-header h2 {
+            font-size: 2.2em;
+            color: #e53935;
+            /* Red for alert/issue */
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .report-form-header p {
+            color: #5d4037;
+            font-size: 1.1em;
+        }
+
+        /* Form */
+        .form-section-title {
+            font-weight: 700;
+            color: #1b5e20;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 1em;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #c5e1a5;
+        }
+
+        .input-group-row {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .input-group-row>div {
+            flex: 1;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 600;
+            color: #3e2723;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #c5e1a5;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 1em;
+            background: #fcfdfc;
+            color: #1b5e20;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        /* File Upload */
+        .file-upload-group {
+            text-align: left;
+            margin-top: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f1f8e9;
+            border-radius: 10px;
+            border: 1px dashed #43a047;
+        }
+
+        .file-upload-group input[type="file"] {
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        /* Submit Button */
+        .submit-report-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #e53935, #c62828);
+            /* Red gradient for Report */
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.3);
+            transition: all 0.3s;
+        }
+
+        .submit-report-button:hover {
+            background: linear-gradient(135deg, #c62828, #b71c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(229, 57, 53, 0.4);
+        }
+
+        @media (max-width: 600px) {
+            .input-group-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .main-content {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header-nav">
+        <a href="../index.html" class="logo-section">
+            <img class="logo-circle" src="../assets/images/logoooo.png" alt="Ulavan Planet Logo">
+            <h1>ULAVAN PLANET</h1>
+        </a>
+        <div class="nav-links">
+            <a href="../index.html">Home</a>
+            <a href="products_page.html">Shop All</a>
+            <a href="Track.html">Track Order</a>
+            <a href="feedback.html">Feedback</a>
+            <a href="user_details.html">Profile</a>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="report-form-header">
+            <i class="material-icons" style="font-size: 60px; color: #e53935;">report_problem</i>
+            <h2>Report an Issue</h2>
+            <p>We're sorry you're facing trouble. Please tell us more so we can help.</p>
+        </div>
+
+        <form>
+            <h3 class="form-section-title">1. Your Details</h3>
+            <div class="input-group-row">
+                <div>
+                    <label class="input-label" for="c_name">Full Name</label>
+                    <input type="text" id="c_name" placeholder="John Doe" required>
+                </div>
+                <div>
+                    <label class="input-label" for="c_email">Email Address</label>
+                    <input type="email" id="c_email" placeholder="john@example.com" required>
+                </div>
+            </div>
+            <div class="input-group-row">
+                <div>
+                    <label class="input-label" for="c_phone">Contact Number</label>
+                    <input type="text" id="c_phone" placeholder="+91 98765 43210">
+                </div>
+                <div>
+                    <label class="input-label" for="order_id">Order ID (Optional)</label>
+                    <input type="text" id="order_id" placeholder="#ORD-12345">
+                </div>
+            </div>
+
+            <h3 class="form-section-title">2. Issue Information</h3>
+            <div class="input-group-row">
+                <div>
+                    <label class="input-label" for="issue_type">Issue Type</label>
+                    <select id="issue_type" required>
+                        <option value="">Select Category</option>
+                        <option value="delivery">Delivery Delay</option>
+                        <option value="product">Damaged / Wrong Product</option>
+                        <option value="payment">Payment / Refund</option>
+                        <option value="quality">Quality Issue</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="input-label" for="issue_subject">Subject</label>
+                    <input type="text" id="issue_subject" placeholder="Brief summary of the issue" required>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label class="input-label" for="issue_desc">Detailed Description</label>
+                <textarea id="issue_desc" placeholder="Please describe what happened..." required></textarea>
+            </div>
+
+            <button type="submit" class="submit-report-button"
+                style="border: none; cursor: pointer; width: 100%;">Submit Complaint</button>
+        </form>
+    </div>
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!requireAuth()) return;
+            updateAuthUI();
+
+            const user = getUser();
+            if (user) {
+                document.getElementById('c_name').value = user.username;
+                document.getElementById('c_email').value = user.email;
+                document.getElementById('c_phone').value = user.phone || '';
+            }
+
+            const reportForm = document.querySelector('form');
+
+            reportForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const submitBtn = reportForm.querySelector('.submit-report-button');
+                if (submitBtn.disabled) return;
+
+                submitBtn.disabled = true;
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Submitting...';
+
+                const reportData = {
+                    order_id: document.getElementById('order_id').value || null,
+                    issue_type: document.getElementById('issue_type').value,
+                    subject: document.getElementById('issue_subject').value,
+                    description: document.getElementById('issue_desc').value
+                };
+
+                try {
+                    console.log('Sending report data:', reportData);
+                    const response = await apiPost(API_CONFIG.REPORTS.BASE, reportData);
+                    console.log('Report response:', response);
+                    alert('Your report has been submitted successfully. Our team will look into it.');
+                    window.location.href = '../index.html';
+                } catch (err) {
+                    console.error('Submission error details:', err);
+                    alert('Submission failed: ' + (err.message || 'Unknown error'));
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
