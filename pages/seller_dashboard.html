@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seller Dashboard - ULAVAN PLANET</title>
+    <meta name="description" content="Manage your seller account, view orders, and track your sales on ULAVAN PLANET">
+    <link rel="stylesheet" href="../css/seller_dashboard.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+
+    <header>
+        <div class="top-bar">
+            <div class="logo" style="align-items: center;display: flex; gap: 20px;">
+                <img src="../assets/images/logoooo.png" alt="Ulavan Planet Logo" height="30px"> <strong>ULAVAN
+                    PLANET</strong>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search orders, products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 Logout</a>
+                <a href="../index.html">🏠 Home</a>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="./products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./categories.html">Brands</a>
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./seller_dashboard.html" class="active">Seller Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Seller Profile Section -->
+        <div class="seller-profile-section">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="seller-avatar">
+                        <img src="../assets/images/logoooo.png" alt="Seller Avatar" id="sellerAvatar">
+                        <div class="online-status"></div>
+                    </div>
+                    <div class="seller-info">
+                        <h1 id="sellerName">Green Valley Farms</h1>
+                        <p class="seller-email"><i class="fas fa-envelope"></i> greenvalley@example.com</p>
+                        <p class="seller-phone"><i class="fas fa-phone"></i> +91 98765 43210</p>
+                        <div class="seller-badges">
+                            <span class="badge verified"><i class="fas fa-check-circle"></i> Verified Seller</span>
+                            <span class="badge premium"><i class="fas fa-crown"></i> Premium</span>
+                            <span class="badge rating"><i class="fas fa-star"></i> 4.8 Rating</span>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="btn-edit" id="editProfileBtn">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+
+                <div class="seller-details-grid">
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <label>Business Address</label>
+                            <p id="sellerAddress">123 Farm Road, Green Valley, Tamil Nadu - 600001</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
+                        <i class="fas fa-store"></i>
+                        <div>
+                            <label>Store Name</label>
+                            <p id="storeName">Green Valley Organic Store</p>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-certificate"></i>
+                        <div>
+                            <label>Business License</label>
+                            <p id="businessLicense">GVF-2023-TN-001</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Orders</h3>
+                    <p class="stat-number">248</p>
+                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 12% this month</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Pending Orders</h3>
+                    <p class="stat-number">15</p>
+                    <span class="stat-change neutral">Needs attention</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <i class="fas fa-rupee-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Total Revenue</h3>
+                    <p class="stat-number">₹1,24,500</p>
+                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 8% this month</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Products Listed</h3>
+                    <p class="stat-number">42</p>
+                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 5 new</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory Management Section -->
+        <div class="inventory-section">
+            <div class="section-header">
+                <h2><i class="fas fa-boxes"></i> My Products & Inventory</h2>
+                <div class="filter-controls">
+                    <button class="btn-add-product" onclick="window.location.href='product_adding_page.html'">
+                        <i class="fas fa-plus"></i> Add New
+                    </button>
+                </div>
+            </div>
+            <div class="products-grid-dashboard" id="sellerProductsGrid">
+                <!-- Dynamic Products -->
+                <p style="padding: 20px; text-align: center;">Loading products...</p>
+            </div>
+        </div>
+
+        <!-- Stock Update Modal (Simple) -->
+        <div id="stockModal" class="modal"
+            style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+            <div class="modal-content"
+                style="background: white; padding: 30px; border-radius: 15px; width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-edit"></i> Update Stock</h3>
+                <p id="modalProductName" style="font-weight: bold; margin-bottom: 15px; color: #2e7d32;"></p>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-size: 0.9em; color: #666;">New Stock
+                        Quantity</label>
+                    <input type="number" id="newStockInput"
+                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1.1em;"
+                        min="0">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="closeStockModal()"
+                        style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: #f5f5f5; cursor: pointer;">Cancel</button>
+                    <button id="saveStockBtn"
+                        style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: #2e7d32; color: white; cursor: pointer; font-weight: bold;">Save
+                        Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div class="orders-section">
+            <div class="section-header">
+                <h2><i class="fas fa-list-alt"></i> Recent Orders</h2>
+                <div class="filter-controls">
+                    <select id="orderFilter" class="filter-select">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="text" placeholder="Search orders..." class="search-input" id="orderSearch">
+                </div>
+            </div>
+
+            <div class="orders-table-container">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Dynamic Orders -->
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 20px;">Loading orders...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button class="page-btn" disabled><i class="fas fa-chevron-left"></i> Previous</button>
+                <span class="page-info">Page 1 of 31</span>
+                <button class="page-btn">Next <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Buyer Feedback & Reports Section -->
+        <div class="reports-section" id="feedback-section">
+            <div class="section-header">
+                <h2><i class="fas fa-comments"></i> Buyer Feedback & Reports</h2>
+                <div class="filter-controls">
+                    <input type="text" placeholder="Search reports..." class="search-input" id="reportSearch">
+                </div>
+            </div>
+            <div class="reports-grid" id="reportsList">
+                <p style="text-align: center; padding: 20px;">Loading reports...</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="quick-actions-section">
+            <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+            <div class="actions-grid">
+                <button class="action-card">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Add New Product</span>
+                </button>
+                <button class="action-card">
+                    <i class="fas fa-chart-line"></i>
+                    <span>View Analytics</span>
+                </button>
+                <button class="action-card">
+                    <i class="fas fa-tags"></i>
+                    <span>Manage Inventory</span>
+                </button>
+                <button class="action-card"
+                    onclick="document.getElementById('feedback-section').scrollIntoView({behavior: 'smooth'})">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>View Feedback</span>
+                </button>
+                <button class="action-card">
+                    <i class="fas fa-percentage"></i>
+                    <span>Create Discount</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <section class="extended-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Ulavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing communities.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="./categories.html">Brands</a></li>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./categories.html">Crop Protection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Seller Resources</h3>
+                <ul>
+                    <li><a href="./seller_dashboard.html">Seller Dashboard</a></li>
+                    <li><a href="#">Seller Guidelines</a></li>
+                    <li><a href="#">Payment Information</a></li>
+                    <li><a href="#">Shipping Policies</a></li>
+                    <li><a href="#">Seller Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Ulavan Planet | Designed with 💚 for Farmers</p>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/seller-dashboard.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - ULAVAN PLANET</title>
+    <meta name="description"
+        content="Manage your user profile, view and edit your personal information on ULAVAN PLANET">
+    <link rel="stylesheet" href="../css/user_details.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+
+<body>
+
+    <header>
+        <div class="top-bar">
+            <div class="logo" style="align-items: center;display: flex; gap: 20px;">
+                <img src="../assets/images/logoooo.png" alt="Ulavan Planet Logo" height="30px"> <strong>ULAVAN
+                    PLANET</strong>
+
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html">🛒 cart</a>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="./products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./categories.html">Brands</a>
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html" class="active">Profile</a>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <div class="profile-header-content">
+                <div class="profile-avatar">
+                    <img src="../assets/images/logoooo.png" alt="User Avatar" id="userAvatar">
+                    <button class="avatar-upload-btn" id="avatarUploadBtn">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <div class="profile-header-info">
+                    <h1 id="displayName">User Name</h1>
+                    <p id="displayEmail">user@example.com</p>
+                    <div class="profile-badges">
+                        <span class="badge"><i class="fas fa-star"></i> Premium Member</span>
+                        <span class="badge"><i class="fas fa-shield-alt"></i> Verified</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <!-- Stats Grid -->
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-item clickable-stat" id="totalOrdersStat" style="cursor: pointer;">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="orderCountText">0</h4>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+
+                <div class="stat-item clickable-stat" id="reviewsGivenStat" style="cursor: pointer;">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                        <i class="fas fa-comment-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4 id="reportsCountText">0</h4>
+                        <p>Feedback & Reports</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Mode -->
+            <div class="profile-view-mode" id="viewMode">
+                <div class="profile-actions">
+                    <button class="btn-primary" id="editBtn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="fas fa-user"></i>
+                            <h3>Personal Information</h3>
+                        </div>
+                        <div class="info-item">
+                            <label>Full Name</label>
+                            <p id="viewFullName">John Doe</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Email Address</label>
+                            <p id="viewEmail">john.doe@example.com</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Phone Number</label>
+                            <p id="viewPhone">+91 98765 43210</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Date of Birth</label>
+                            <p id="viewDob">January 15, 1990</p>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <h3>Address Details</h3>
+                        </div>
+                        <div class="info-item">
+                            <label>Street Address</label>
+                            <p id="viewAddress">123 Green Valley Road</p>
+                        </div>
+                        <div class="info-item">
+                            <label>City</label>
+                            <p id="viewCity">Chennai</p>
+                        </div>
+                        <div class="info-item">
+                            <label>State</label>
+                            <p id="viewState">Tamil Nadu</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Postal Code</label>
+                            <p id="viewPostal">600001</p>
+                        </div>
+                    </div>
+
+
+
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <i class="fas fa-cog"></i>
+                            <h3>Preferences</h3>
+                        </div>
+                        <div class="info-item">
+                            <label>Newsletter Subscription</label>
+                            <p id="viewNewsletter">Subscribed</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Language</label>
+                            <p id="viewLanguage">English</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Currency</label>
+                            <p id="viewCurrency">INR (₹)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Mode -->
+            <div class="profile-edit-mode" id="editMode" style="display: none;">
+                <div class="profile-actions">
+                    <button class="btn-success" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <button class="btn-secondary" id="cancelBtn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+
+                <form id="profileForm">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="fas fa-user"></i>
+                                <h3>Personal Information</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="editFullName">Full Name</label>
+                                <input type="text" id="editFullName" name="fullName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editEmail">Email Address</label>
+                                <input type="email" id="editEmail" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editPhone">Phone Number</label>
+                                <input type="tel" id="editPhone" name="phone" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editDob">Date of Birth</label>
+                                <input type="date" id="editDob" name="dob" required>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <h3>Address Details</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="editAddress">Street Address</label>
+                                <input type="text" id="editAddress" name="address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editCity">City</label>
+                                <input type="text" id="editCity" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editState">State</label>
+                                <input type="text" id="editState" name="state" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editPostal">Postal Code</label>
+                                <input type="text" id="editPostal" name="postal" required>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="fas fa-cog"></i>
+                                <h3>Preferences</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="editNewsletter">Newsletter Subscription</label>
+                                <select id="editNewsletter" name="newsletter">
+                                    <option value="subscribed">Subscribed</option>
+                                    <option value="unsubscribed">Unsubscribed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editLanguage">Language</label>
+                                <select id="editLanguage" name="language">
+                                    <option value="english">English</option>
+                                    <option value="tamil">Tamil</option>
+                                    <option value="hindi">Hindi</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="editCurrency">Currency</label>
+                                <select id="editCurrency" name="currency">
+                                    <option value="inr">INR (₹)</option>
+                                    <option value="usd">USD ($)</option>
+                                    <option value="eur">EUR (€)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <div class="info-card-header">
+                                <i class="fas fa-lock"></i>
+                                <h3>Change Password</h3>
+                            </div>
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword">
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Order Items Modal -->
+    <div id="orderModal" class="modal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10001; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div class="modal-content"
+            style="background: white; padding: 0; border-radius: 20px; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: modalFadeIn 0.3s ease-out;">
+            <div class="modal-header"
+                style="padding: 20px 30px; border-bottom: 2px solid #f1f8e9; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 2;">
+                <h2 style="margin: 0; color: #1b5e20; display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-shopping-bag"></i> Your Ordered Products
+                </h2>
+                <button id="closeOrderModal"
+                    style="background: #f5f5f5; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                    <i class="fas fa-times" style="color: #666; font-size: 1.2rem;"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="orderItemsList" style="padding: 20px 30px;">
+                <p style="text-align: center; padding: 40px; color: #666;">Loading your history...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reports/Feedback Modal -->
+    <div id="reportsModal" class="modal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 10001; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div class="modal-content"
+            style="background: white; padding: 0; border-radius: 20px; width: 90%; max-width: 800px; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); animation: modalFadeIn 0.3s ease-out;">
+            <div class="modal-header"
+                style="padding: 20px 30px; border-bottom: 2px solid #f1f8e9; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 2;">
+                <h2 style="margin: 0; color: #1b5e20; display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-comment-alt"></i> Your Feedback & Reports
+                </h2>
+                <button id="closeReportsModal"
+                    style="background: #f5f5f5; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                    <i class="fas fa-times" style="color: #666; font-size: 1.2rem;"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="reportsListContainer" style="padding: 20px 30px;">
+                <p style="text-align: center; padding: 40px; color: #666;">Loading your feedback...</p>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .order-item-card {
+            display: flex;
+            gap: 20px;
+            padding: 15px;
+            background: #fcfdfc;
+            border: 1px solid #e8f5e9;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: transform 0.2s;
+        }
+
+        .order-item-card:hover {
+            transform: scale(1.01);
+            border-color: #2e7d32;
+        }
+
+        .order-item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-details h4 {
+            margin: 0 0 5px;
+            color: #2e7d32;
+        }
+
+        .order-item-details p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .clickable-stat:hover {
+            background: #f0fdf4 !important;
+            border-color: #22c55e !important;
+        }
+    </style>
+
+    <section class="extended-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Ulavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing
+                    communities.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="./categories.html">Brands</a></li>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./categories.html">Crop Protection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
+                    <li><a href="./user_details.html">User Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Ethula Fooder</h3>
+                <ul>
+                    <li><a href="./categories.html">Cattle Feed</a></li>
+                    <li><a href="./categories.html">Poultry Feed</a></li>
+                    <li><a href="./categories.html">Fish Feed</a></li>
+                    <li><a href="./categories.html">Organic Fodder</a></li>
+                    <li><a href="./categories.html">Feed Supplements</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Ulavan Planet | Designed with 💚 for Farmers</p>
+    </footer>
+
+    <!-- JavaScript Files -->
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/user-profile.js"></script>
+
+</body>
+
+</html>

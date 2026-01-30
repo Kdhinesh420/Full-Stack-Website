@@ -1,0 +1,82 @@
+/* Custom font import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --color-primary: #1b5e20;
+    /* Deep Green */
+    --color-accent: #ffca28;
+    /* Amber */
+    --color-text: #3e2723;
+    /* Earthy Brown */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fdfbf7;
+    /* Warm organic cream/paper tone */
+    background-image: radial-gradient(#e8f5e9 1px, transparent 1px);
+    /* Subtle dot pattern */
+    background-size: 20px 20px;
+    color: var(--color-text);
+    margin: 0;
+    padding: 0;
+}
+
+.product-card {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(46, 125, 50, 0.15);
+    /* Deep green shadow */
+    border-color: #81c784;
+}
+
+.cta-button {
+    background: linear-gradient(135deg, #66bb6a, #43a047);
+    /* Vibrant green gradient */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(67, 160, 71, 0.3);
+}
+
+.cta-button:hover {
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(67, 160, 71, 0.4);
+}
+
+/* Star SVG for rating */
+.star-icon {
+    fill: #ffc107;
+    /* Amber gold */
+    width: 1rem;
+    height: 1rem;
+    margin-right: 2px;
+}
+
+/* Half Star */
+.half-star {
+    clip-path: inset(0 50% 0 0);
+    position: absolute;
+    top: 0;
+    left: 0;
+    fill: #ffc107;
+}
+
+.erro {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    height: 200px;
+}

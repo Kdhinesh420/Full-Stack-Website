@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULAVAN PLANET - Explore Top Agricultural Brands</title>
+    <link rel="stylesheet" href="../css/page4.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo-container">
+            <a href="../index.html" class="logo-link">
+                <img src="../assets/images/logoooo.png" alt="Ulavan Planet Logo" class="circle-icon">
+                <span class="logo-text">ULAVAN PLANET</span>
+            </a>
+        </div>
+        <nav class="navbar">
+            <a href="../index.html">HOME</a>
+            <a href="products_page.html">SHOP</a>
+            <a href="About_page.html">ABOUT</a>
+            <a href="best_selling_page.html">BEST SELLERS</a>
+        </nav>
+    </header>
+
+    <main class="content-area">
+        <aside class="sidebar">
+            <h3 class="filter-heading">FILTERS</h3>
+
+            <div class="filter-group category-filter">
+                <h4 class="filter-title">categories</h4>
+            </div>
+
+            <div class="filter-group expandable-filter">
+                <div class="filter-header">
+                    <span class="filter-name">FLOWER SEEDS</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+
+            <div class="filter-group brands-filter">
+                <div class="filter-header">
+                    <span class="filter-name">BRANDS</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="search products .">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="checkbox-list">
+                    <label class="checkbox-item"><input type="checkbox" checked>Syngenta Seeds</label>
+                    <label class="checkbox-item"><input type="checkbox"> BASF Seeds</label>
+                    <label class="checkbox-item"><input type="checkbox"> Mahyco Seeds</label>
+                    <label class="checkbox-item"><input type="checkbox"> Rasi Seeds</label>
+                </div>
+            </div>
+
+            <div class="filter-group price-filter">
+                <h4 class="filter-title">price range</h4>
+                <div class="range-controls">
+                    <input type="number" value="0" min="0" max="2000" class="price-input">
+                    <span class="separator">TO</span>
+                    <input type="number" value="2000" min="0" max="2000" class="price-input">
+                </div>
+                <div class="range-slider-placeholder"></div>
+            </div>
+
+            <div class="filter-group simple-filter">
+                <h4 class="filter-title">RATING</h4>
+            </div>
+
+            <div class="filter-group simple-filter availability-filter">
+                <h4 class="filter-title">AVAILABILITY</h4>
+            </div>
+
+        </aside>
+
+        <section class="product-grid-container">
+            <div class="product-grid">
+                <!-- Dynamic Content Loading -->
+            </div>
+
+        </section>
+    </main>
+
+    <!-- JavaScript Files -->
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/categories.js"></script>
+</body>
+
+</html>
