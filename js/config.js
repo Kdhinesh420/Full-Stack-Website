@@ -4,7 +4,7 @@
  */
 
 const API_CONFIG = {
-    BASE_URL: 'https://ulavan-planet-backend-1.onrender.com',
+    BASE_URL: 'https://ulavan-planet-backend-4.onrender.com',
 
     // Authentication endpoints
     AUTH: {
@@ -45,7 +45,8 @@ const API_CONFIG = {
 
     // Upload endpoints
     UPLOAD: {
-        IMAGE: '/upload/image'
+        IMAGE: '/upload/image',
+        BULK_IMAGES: '/upload/images'
     }
 };
 
