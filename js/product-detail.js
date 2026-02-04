@@ -30,7 +30,7 @@ async function loadProductDetails(id) {
     const product = await apiGet(`${API_CONFIG.PRODUCTS.BASE}/${id}`);
 
     // Update Page Title
-    document.title = `${product.name} - ULAVAN PLANET`;
+    document.title = `${product.name} - UZHAVAN PLANET`;
 
     // Update Image
     const mainImage = document.querySelector('.main-image-placeholder img');

@@ -128,9 +128,24 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             // Optionally save to profile
             if (document.getElementById('save_address').checked) {
-                // Only update if something changed
-                if (fullAddressString !== user.address || addressData.phone !== user.phone) {
+                // Normalize addresses for comparison (remove extra spaces, lowercase)
+                const normalizeAddress = (addr) => {
+                    return addr ? addr.trim().toLowerCase().replace(/\s+/g, ' ') : '';
+                };
+
+                const currentAddress = normalizeAddress(user.address || '');
+                const newAddress = normalizeAddress(fullAddressString);
+                const currentPhone = (user.phone || '').trim();
+                const newPhone = (addressData.phone || '').trim();
+
+                // Only update if something ACTUALLY changed
+                const addressChanged = newAddress !== currentAddress;
+                const phoneChanged = newPhone !== currentPhone;
+
+                if (addressChanged || phoneChanged) {
                     try {
+                        console.log('Address changed:', addressChanged, 'Phone changed:', phoneChanged);
+
                         await apiPut(API_CONFIG.AUTH.ME, {
                             address: fullAddressString,
                             phone: addressData.phone
@@ -139,9 +154,14 @@ document.addEventListener('DOMContentLoaded', async function () {
                         // Update local user object
                         const updatedUser = { ...user, address: fullAddressString, phone: addressData.phone };
                         saveUser(updatedUser);
+
+                        console.log('Profile updated successfully');
                     } catch (err) {
                         console.error('Failed to save address to profile:', err);
+                        alert('Warning: Could not save address to profile. But order will proceed.');
                     }
+                } else {
+                    console.log('No changes detected - skipping profile update');
                 }
             }
 

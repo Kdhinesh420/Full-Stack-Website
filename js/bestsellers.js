@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 </div>
                 <div class="p-5">
                     <h3 class="text-xl font-bold text-gray-800 mb-1">${product.name}</h3>
-                    <p class="text-sm text-gray-500 mb-3 line-clamp-1">${product.description || 'Premium quality product from Ulavan Planet'}</p>
+                    <p class="text-sm text-gray-500 mb-3 line-clamp-1">${product.description || 'Premium quality product from Uzhavan Planet'}</p>
 
                     <div class="flex items-center mb-3">
                         <div class="flex text-yellow-400 mr-2">
