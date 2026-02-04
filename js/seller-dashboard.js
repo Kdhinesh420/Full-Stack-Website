@@ -210,7 +210,9 @@ async function resolveReport(reportId) {
     if (!confirm('Mark this issue as resolved?')) return;
 
     try {
-        await apiPut(`${API_CONFIG.REPORTS.BASE}/${reportId}/status?status=resolved`, {});
+        const baseUrl = API_CONFIG.REPORTS.BASE;
+        const endpoint = baseUrl.endsWith('/') ? `${baseUrl}${reportId}/status?status=resolved` : `${baseUrl}/${reportId}/status?status=resolved`;
+        await apiPut(endpoint, {});
         showSuccess('Report marked as resolved');
         await loadSellerReports();
     } catch (err) {
@@ -325,7 +327,9 @@ async function saveStockUpdate() {
     btn.textContent = 'Saving...';
 
     try {
-        await apiPut(`${API_CONFIG.PRODUCTS.BASE}/${currentEditingProductId}`, {
+        const baseUrl = API_CONFIG.PRODUCTS.BASE;
+        const endpoint = baseUrl.endsWith('/') ? `${baseUrl}${currentEditingProductId}` : `${baseUrl}/${currentEditingProductId}`;
+        await apiPut(endpoint, {
             stock_quantity: newStock
         });
 
@@ -458,7 +462,9 @@ async function updateStatus(orderId, newStatus) {
     if (!confirm(`Update order #${orderId} to ${newStatus}?`)) return;
 
     try {
-        await apiPut(`${API_CONFIG.ORDERS.BASE}/${orderId}/status`, { status: newStatus });
+        const baseUrl = API_CONFIG.ORDERS.BASE;
+        const endpoint = baseUrl.endsWith('/') ? `${baseUrl}${orderId}/status` : `${baseUrl}/${orderId}/status`;
+        await apiPut(endpoint, { status: newStatus });
         showSuccess(`Order updated to ${newStatus}`);
         await loadSellerOrders(); // Refresh table
         await loadSellerStats(); // Refresh stats (pending count might change)
@@ -473,7 +479,9 @@ async function updateStatus(orderId, newStatus) {
  */
 async function viewOrderDetails(orderId) {
     try {
-        const order = await apiGet(`${API_CONFIG.ORDERS.BASE}/${orderId}`);
+        const baseUrl = API_CONFIG.ORDERS.BASE;
+        const endpoint = baseUrl.endsWith('/') ? `${baseUrl}${orderId}` : `${baseUrl}/${orderId}`;
+        const order = await apiGet(endpoint);
         const itemsList = order.items.map(i => `- ${i.product_name} x${i.quantity} (${formatPrice(i.price)})`).join('\n');
 
         alert(`Order #${order.order_id} Details:\n\nCustomer: ${order.customer_name || 'N/A'}\nStatus: ${order.status}\nTotal: ${formatPrice(order.total_amount)}\n\nItems:\n${itemsList}`);
@@ -503,7 +511,9 @@ async function deleteProduct(productId, productName) {
     if (!confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) return;
 
     try {
-        await apiDelete(`${API_CONFIG.PRODUCTS.BASE}/${productId}`);
+        const baseUrl = API_CONFIG.PRODUCTS.BASE;
+        const endpoint = baseUrl.endsWith('/') ? `${baseUrl}${productId}` : `${baseUrl}/${productId}`;
+        await apiDelete(endpoint);
         showSuccess(`Product "${productName}" deleted successfully`);
         await loadSellerProducts(); // Refresh list
         await loadSellerStats(); // Refresh stats

@@ -26,8 +26,10 @@ document.addEventListener('DOMContentLoaded', async function () {
  * Load product details from API
  */
 async function loadProductDetails(id) {
-    // Fetch product
-    const product = await apiGet(`${API_CONFIG.PRODUCTS.BASE}/${id}`);
+    // Fetch product - Ensure no double slashes if BASE already ends in /
+    const baseUrl = API_CONFIG.PRODUCTS.BASE;
+    const endpoint = baseUrl.endsWith('/') ? `${baseUrl}${id}` : `${baseUrl}/${id}`;
+    const product = await apiGet(endpoint);
 
     // Update Page Title
     document.title = `${product.name} - UZHAVAN PLANET`;
@@ -42,10 +44,13 @@ async function loadProductDetails(id) {
     if (thumbnailsContainer) {
         thumbnailsContainer.innerHTML = ''; // Clear existing
 
-        // Use provided images list or fallback to single image
-        let imagesList = product.images && product.images.length > 0 ? product.images : [imageUrl];
+        // Use image_url, image_url_2, and image_url_3 from Render schema
+        const imagesList = [product.image_url, product.image_url_2, product.image_url_3]
+            .filter(url => url && url.length > 0); // Only keep valid URLs
 
-        imagesList.forEach((img, index) => {
+        const finalImagesList = imagesList.length > 0 ? imagesList : [imageUrl];
+
+        finalImagesList.forEach((img, index) => {
             const thumbDiv = document.createElement('div');
             thumbDiv.className = `thumbnail ${index === 0 ? 'active' : ''}`;
             const thumbImg = document.createElement('img');

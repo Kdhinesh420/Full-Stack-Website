@@ -10,7 +10,10 @@
  * @returns {Promise} - Response data or error
  */
 async function apiCall(endpoint, options = {}) {
-    const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+    // Sanitize URL Construction
+    const baseUrl = API_CONFIG.BASE_URL.endsWith('/') ? API_CONFIG.BASE_URL.slice(0, -1) : API_CONFIG.BASE_URL;
+    const sanitizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+    const url = `${baseUrl}${sanitizedEndpoint}`;
 
     // Default headers
     const headers = {
