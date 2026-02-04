@@ -13,7 +13,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const submitBtn = form.querySelector('button[type="submit"]');
 
     // Add missing form fields if they don't exist
-    addMissingFields(form, submitBtn);
+    // We wrap this in an async function to avoid blocking the main flow but still ensure fields exist
+    const initializeForm = async () => {
+        await addMissingFields(form, submitBtn);
+    };
+    initializeForm();
 
     // Handle form submission
     form.addEventListener('submit', async function (e) {
@@ -22,16 +26,23 @@ document.addEventListener('DOMContentLoaded', function () {
         const name = document.getElementById('product-name').value.trim();
         const description = document.getElementById('product-description').value.trim();
         const price = parseFloat(document.getElementById('product-price').value);
-        const stock = parseInt(document.getElementById('product-stock').value);
-        let categoryId = document.getElementById('product-category').value;
-        const newCategoryName = document.getElementById('new-category-name')?.value.trim();
+
+        // Use optional chaining in case they are not added yet (though initializeForm should handle it)
+        const stockInput = document.getElementById('product-stock');
+        const stock = stockInput ? parseInt(stockInput.value) : 10;
+
+        const categorySelect = document.getElementById('product-category');
+        let categoryId = categorySelect ? categorySelect.value : null;
+
+        const newCategoryInput = document.getElementById('new-category-name');
+        const newCategoryName = newCategoryInput ? newCategoryInput.value.trim() : '';
 
         // Get the files
         const fileInput = document.getElementById('product-images');
         const files = fileInput.files;
 
         // Validation
-        if (!name || isNaN(price) || isNaN(stock)) {
+        if (!name || isNaN(price)) {
             alert('Please fill in all required fields correctly.');
             return;
         }
@@ -41,26 +52,37 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        // Additional Frontend Validation for Image Types
+        for (let i = 0; i < files.length; i++) {
+            if (!files[i].type.startsWith('image/')) {
+                alert(`File "${files[i].name}" is not a valid image.`);
+                return;
+            }
+        }
+
         const originalText = submitBtn.textContent;
         submitBtn.disabled = true;
 
         try {
-            // 1. Upload Images to Cloudinary via Backend
-            submitBtn.textContent = `Uploading ${files.length} Images...`;
-            const formData = new FormData();
+            // 1. Upload Images to Cloudinary one by one (since bulk is missing on Render)
+            const imageUrls = [];
+            for (let i = 0; i < Math.min(files.length, 3); i++) { // Limit to 3 images as per deployed schema
+                submitBtn.textContent = `Uploading Image ${i + 1}/${Math.min(files.length, 3)}...`;
 
-            // Append all files
-            for (let i = 0; i < files.length; i++) {
-                formData.append('files', files[i]);
+                const formData = new FormData();
+                formData.append('file', files[i]); // Render expects 'file' for single upload
+
+                console.log('Uploading image to:', API_CONFIG.UPLOAD.IMAGE);
+                const uploadRes = await apiPostFormData(API_CONFIG.UPLOAD.IMAGE, formData);
+
+                if (uploadRes && uploadRes.url) {
+                    imageUrls.push(uploadRes.url);
+                }
             }
 
-            // Use the new bulk upload endpoint (manually constructed URL if config not updated yet)
-            // Assuming API_CONFIG.UPLOAD.IMAGE is /upload/image, we use /upload/images
-            const uploadUrl = API_CONFIG.UPLOAD.IMAGE + "s";
-            const uploadRes = await apiPostFormData(uploadUrl, formData);
-
-            const imageUrls = uploadRes.urls;
-            const primaryImageUrl = imageUrls[0]; // Use first image as primary
+            if (imageUrls.length === 0) {
+                throw new Error('No images were successfully uploaded.');
+            }
 
             // 2. Create Category (if needed)
             if (categoryId === 'new') {
@@ -76,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 categoryId = newCat.category_id || newCat.id;
             }
 
-            // 3. Create Product with Image URLs
+            // 3. Create Product with Image URLs mapping to Render schema
             submitBtn.textContent = 'Creating Product...';
             const productData = {
                 name: name,
@@ -84,8 +106,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 price: price,
                 stock_quantity: stock,
                 category_id: categoryId ? parseInt(categoryId) : null,
-                image_url: primaryImageUrl,
-                images: imageUrls
+                image_url: imageUrls[0] || null,
+                image_url_2: imageUrls[1] || null,
+                image_url_3: imageUrls[2] || null
             };
 
             await apiPost(API_CONFIG.PRODUCTS.BASE, productData);

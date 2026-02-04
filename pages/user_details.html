@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Profile - ULAVAN PLANET</title>
+    <title>User Profile - UZHAVAN PLANET</title>
     <meta name="description"
-        content="Manage your user profile, view and edit your personal information on ULAVAN PLANET">
+        content="Manage your user profile, view and edit your personal information on UZHAVAN PLANET">
     <link rel="stylesheet" href="../css/user_details.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -18,7 +18,7 @@
     <header>
         <div class="top-bar">
             <div class="logo" style="align-items: center;display: flex; gap: 20px;">
-                <img src="../assets/images/logoooo.png" alt="Ulavan Planet Logo" height="30px"> <strong>ULAVAN
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo" height="30px"> <strong>UZHAVAN
                     PLANET</strong>
 
             </div>
@@ -49,6 +49,7 @@
             <div class="profile-header-content">
                 <div class="profile-avatar">
                     <img src="../assets/images/logoooo.png" alt="User Avatar" id="userAvatar">
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
                     <button class="avatar-upload-btn" id="avatarUploadBtn">
                         <i class="fas fa-camera"></i>
                     </button>
@@ -143,26 +144,6 @@
                         </div>
                     </div>
 
-
-
-                    <div class="info-card">
-                        <div class="info-card-header">
-                            <i class="fas fa-cog"></i>
-                            <h3>Preferences</h3>
-                        </div>
-                        <div class="info-item">
-                            <label>Newsletter Subscription</label>
-                            <p id="viewNewsletter">Subscribed</p>
-                        </div>
-                        <div class="info-item">
-                            <label>Language</label>
-                            <p id="viewLanguage">English</p>
-                        </div>
-                        <div class="info-item">
-                            <label>Currency</label>
-                            <p id="viewCurrency">INR (₹)</p>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -225,35 +206,7 @@
                             </div>
                         </div>
 
-                        <div class="info-card">
-                            <div class="info-card-header">
-                                <i class="fas fa-cog"></i>
-                                <h3>Preferences</h3>
-                            </div>
-                            <div class="form-group">
-                                <label for="editNewsletter">Newsletter Subscription</label>
-                                <select id="editNewsletter" name="newsletter">
-                                    <option value="subscribed">Subscribed</option>
-                                    <option value="unsubscribed">Unsubscribed</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="editLanguage">Language</label>
-                                <select id="editLanguage" name="language">
-                                    <option value="english">English</option>
-                                    <option value="tamil">Tamil</option>
-                                    <option value="hindi">Hindi</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="editCurrency">Currency</label>
-                                <select id="editCurrency" name="currency">
-                                    <option value="inr">INR (₹)</option>
-                                    <option value="usd">USD ($)</option>
-                                    <option value="eur">EUR (€)</option>
-                                </select>
-                            </div>
-                        </div>
+
 
                         <div class="info-card">
                             <div class="info-card-header">
@@ -382,7 +335,7 @@
     <section class="extended-footer">
         <div class="footer-grid">
             <div class="footer-col">
-                <h3>Ulavan Planet</h3>
+                <h3>Uzhavan Planet</h3>
                 <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
                     nourishing
                     communities.</p>
@@ -423,7 +376,7 @@
     </section>
 
     <footer>
-        <p>© 2025 Ulavan Planet | Designed with 💚 for Farmers</p>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
     </footer>
 
     <!-- JavaScript Files -->

@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Seller Dashboard - ULAVAN PLANET</title>
-    <meta name="description" content="Manage your seller account, view orders, and track your sales on ULAVAN PLANET">
+    <title>Seller Dashboard - UZHAVAN PLANET</title>
+    <meta name="description" content="Manage your seller account, view orders, and track your sales on UZHAVAN PLANET">
     <link rel="stylesheet" href="../css/seller_dashboard.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -17,7 +17,7 @@
     <header>
         <div class="top-bar">
             <div class="logo" style="align-items: center;display: flex; gap: 20px;">
-                <img src="../assets/images/logoooo.png" alt="Ulavan Planet Logo" height="30px"> <strong>ULAVAN
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo" height="30px"> <strong>UZHAVAN
                     PLANET</strong>
             </div>
             <div class="search-bar">
@@ -49,7 +49,11 @@
                 <div class="profile-header">
                     <div class="seller-avatar">
                         <img src="../assets/images/logoooo.png" alt="Seller Avatar" id="sellerAvatar">
-                        <div class="online-status"></div>
+                        <input type="file" id="sellerAvatarInput" accept="image/*" style="display: none;">
+                        <button class="avatar-upload-btn" id="sellerAvatarBtn"
+                            style="position: absolute; bottom: 0; right: 0; background: #2ecc71; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                            <i class="fas fa-camera" style="font-size: 0.9rem;"></i>
+                        </button>
                     </div>
                     <div class="seller-info">
                         <h1 id="sellerName">Green Valley Farms</h1>
@@ -274,7 +278,7 @@
     <section class="extended-footer">
         <div class="footer-grid">
             <div class="footer-col">
-                <h3>Ulavan Planet</h3>
+                <h3>Uzhavan Planet</h3>
                 <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
                     nourishing communities.</p>
             </div>
@@ -313,7 +317,7 @@
     </section>
 
     <footer>
-        <p>© 2025 Ulavan Planet | Designed with 💚 for Farmers</p>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
     </footer>
 
     <!-- JavaScript Files -->

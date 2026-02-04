@@ -399,6 +399,49 @@ function setupEventListeners() {
         });
     }
 
+    // Seller Avatar Upload
+    const avatarBtn = document.getElementById('sellerAvatarBtn');
+    const avatarInput = document.getElementById('sellerAvatarInput');
+    const sellerAvatarImg = document.getElementById('sellerAvatar');
+
+    if (avatarBtn && avatarInput) {
+        avatarBtn.addEventListener('click', () => avatarInput.click());
+
+        avatarInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                alert('Please select a valid image file');
+                return;
+            }
+
+            const originalBtnContent = avatarBtn.innerHTML;
+            avatarBtn.disabled = true;
+            avatarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                console.log('Uploading seller avatar...');
+                const result = await apiPostFormData(API_CONFIG.UPLOAD.IMAGE, formData);
+
+                if (result && result.url) {
+                    sellerAvatarImg.src = result.url;
+                    showSuccess('Store profile picture updated!');
+                }
+            } catch (error) {
+                console.error('Seller avatar upload failed:', error);
+                alert(error.message || 'Failed to upload image');
+            } finally {
+                avatarBtn.disabled = false;
+                avatarBtn.innerHTML = originalBtnContent;
+                avatarInput.value = '';
+            }
+        });
+    }
+
     // Quick Actions - Add Product
     // We need to find the "Add New Product" button in the Quick Actions section
     // It's the first button in .actions-grid

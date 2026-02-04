@@ -63,8 +63,15 @@ async function apiCall(endpoint, options = {}) {
 
         if (!response.ok) {
             // Other errors
-            const error = await response.json();
-            throw new Error(error.detail || 'An error occurred');
+            let errorMessage = 'An error occurred';
+            try {
+                const error = await response.json();
+                errorMessage = error.detail || errorMessage;
+            } catch (e) {
+                // If not JSON, use the status text
+                errorMessage = `Server Error (${response.status}): ${response.statusText || 'Internal Server Error'}`;
+            }
+            throw new Error(errorMessage);
         }
 
         // Handle 204 No Content
@@ -137,8 +144,15 @@ async function apiPostFormData(endpoint, formData) {
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Upload failed');
+            let errorMessage = 'Upload failed';
+            try {
+                const error = await response.json();
+                errorMessage = error.detail || errorMessage;
+            } catch (e) {
+                // If not JSON, use the status text
+                errorMessage = response.statusText || errorMessage;
+            }
+            throw new Error(errorMessage);
         }
 
         return await response.json();

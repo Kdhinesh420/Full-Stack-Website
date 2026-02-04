@@ -4,7 +4,7 @@
  */
 
 const API_CONFIG = {
-    BASE_URL: 'https://ulavan-planet-backend-4.onrender.com',
+    BASE_URL: 'https://uzhavan-planet-frontend.onrender.com',
 
     // Authentication endpoints
     AUTH: {
@@ -15,25 +15,25 @@ const API_CONFIG = {
 
     // Product endpoints
     PRODUCTS: {
-        BASE: '/products',
+        BASE: '/products/',
         MY_PRODUCTS: '/products/my-products'
     },
 
     // Cart endpoints
     CART: {
-        BASE: '/cart'
+        BASE: '/cart/'
     },
 
     // Order endpoints
     ORDERS: {
-        BASE: '/orders',
+        BASE: '/orders/',
         MY_ORDERS: '/orders/my-orders',
         SELLER_ORDERS: '/orders/seller/orders'
     },
 
     // Category endpoints
     CATEGORIES: {
-        BASE: '/categories'
+        BASE: '/categories/'
     },
 
     // Report endpoints

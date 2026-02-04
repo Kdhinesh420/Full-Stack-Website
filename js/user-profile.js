@@ -81,6 +81,56 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
+    // Avatar Upload Listeners
+    const avatarBtn = document.getElementById('avatarUploadBtn');
+    const avatarInput = document.getElementById('avatarInput');
+    const userAvatarImg = document.getElementById('userAvatar');
+
+    if (avatarBtn && avatarInput) {
+        avatarBtn.addEventListener('click', () => {
+            avatarInput.click();
+        });
+
+        avatarInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Validate type
+            if (!file.type.startsWith('image/')) {
+                showError('Please select a valid image file');
+                return;
+            }
+
+            const originalBtnContent = avatarBtn.innerHTML;
+            avatarBtn.disabled = true;
+            avatarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                console.log('Uploading avatar...');
+                const result = await apiPostFormData(API_CONFIG.UPLOAD.IMAGE, formData);
+
+                if (result && result.url) {
+                    userAvatarImg.src = result.url;
+                    showSuccess('Profile picture uploaded successfully!');
+
+                    // Note: We don't have a profile_image field in the User model yet,
+                    // so we can't save this persistent link to the user record.
+                    // For now, we just update the UI.
+                }
+            } catch (error) {
+                console.error('Avatar upload failed:', error);
+                showError(error.message || 'Failed to upload image');
+            } finally {
+                avatarBtn.disabled = false;
+                avatarBtn.innerHTML = originalBtnContent;
+                avatarInput.value = ''; // Reset input
+            }
+        });
+    }
+
     window.addEventListener('click', (e) => {
         if (e.target === orderModal) {
             orderModal.style.display = 'none';
