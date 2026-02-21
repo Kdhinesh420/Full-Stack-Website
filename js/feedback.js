@@ -1,80 +1,117 @@
+// ===================================================
+// FEEDBACK.JS - Feedback Page JavaScript
+// ===================================================
+// User feedback submission
+
 /**
- * Feedback Page JavaScript
- * Handles user feedback submission functionality
+ * initFeedbackPage - Page load ஆகும்போது call ஆகும்
  */
+function initFeedbackPage() {
+    console.log('💬 Initializing feedback page...');
+    setupFeedbackForm();
+}
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Check authentication
-    if (!requireAuth()) return;
-    updateAuthUI();
-
-    const user = getUser();
-    const feedbackForm = document.querySelector('form');
-    const nameInput = document.querySelector('input[type="text"]');
-    const emailInput = document.querySelector('input[type="email"]');
-    const commentBox = document.querySelector('.comment-box');
-    const submitBtn = document.querySelector('.submit-button');
-    const emojiOptions = document.querySelectorAll('.emoji-option');
-
-    let selectedRating = 'Great'; // Default as per HTML active state
-
-    // Pre-fill user data
-    if (user) {
-        if (nameInput) nameInput.value = user.username;
-        if (emailInput) emailInput.value = user.email;
-    }
-
-    // Handle emoji selection
-    emojiOptions.forEach(option => {
-        option.addEventListener('click', function () {
-            // Remove active state from all
-            emojiOptions.forEach(opt => opt.style.opacity = '0.5');
-
-            // Set active state to clicked
-            this.style.opacity = '1';
-            selectedRating = this.querySelector('.emoji-label').textContent;
-        });
-    });
-
-    // Handle form submission
+/**
+ * setupFeedbackForm - Form event listener setup பண்ணும்
+ */
+function setupFeedbackForm() {
+    const feedbackForm = document.getElementById('feedback-form');
     if (feedbackForm) {
-        feedbackForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            if (!commentBox.value.trim()) {
-                alert('Please provide some comments.');
-                return;
-            }
-
-            const originalText = submitBtn.textContent;
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-
-            const feedbackData = {
-                issue_type: 'Feedback: ' + selectedRating,
-                subject: 'User Feedback from ' + (nameInput.value || 'Anonymous'),
-                description: commentBox.value,
-                order_id: null
-            };
-
-            try {
-                await apiPost(API_CONFIG.REPORTS.BASE, feedbackData);
-                alert('Thank you for your feedback!');
-                window.location.href = '../index.html';
-            } catch (err) {
-                console.error('Feedback submission error:', err);
-                alert('Failed to submit feedback. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
-            }
-        });
-
-        // Ensure the submit button (which is an <a> tag currently) triggers the form
-        if (submitBtn && submitBtn.tagName === 'A') {
-            submitBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                feedbackForm.dispatchEvent(new Event('submit'));
-            });
-        }
+        feedbackForm.addEventListener('submit', handleFeedbackSubmit);
+        console.log('✅ Feedback form initialized');
     }
-});
+}
+
+/**
+ * handleFeedbackSubmit - Feedback form submit logic
+ */
+async function handleFeedbackSubmit(e) {
+    e.preventDefault();
+
+    const submitBtn = e.target.querySelector('.submit-button');
+    const originalBtnText = submitBtn?.textContent || 'Submit';
+
+    try {
+        // Step 1: Input value-ai edukurom
+        const name = document.getElementById('feedback-name')?.value.trim();
+        const email = document.getElementById('feedback-email')?.value.trim();
+        const message = document.getElementById('feedback-message')?.value.trim();
+        const rating = document.getElementById('feedback-rating')?.value || '5';
+
+        // Validation
+        if (!name || !email || !message) {
+            showModal('Please fill all required fields.', 'warning');
+            return;
+        }
+
+        // Visual feedback
+        if (submitBtn) {
+            submitBtn.textContent = 'Submitting... ⏳';
+            submitBtn.disabled = true;
+        }
+
+        const feedbackData = {
+            name: name,
+            email: email,
+            message: message,
+            rating: parseInt(rating),
+            subject: "General Feedback"
+        };
+
+        // Step 2: API call (api.js function)
+        await submitFeedback(feedbackData);
+
+        // SUCCESS!
+        if (submitBtn) {
+            submitBtn.textContent = 'Submitted! ✅';
+            submitBtn.style.background = '#2e7d32';
+        }
+
+        showModal('Thank you! Your feedback has been sent successfully. ❤️', 'success');
+
+        // Step 3: Form reset and redirect
+        e.target.reset();
+        if (typeof selectEmojiRating === 'function') selectEmojiRating(5);
+
+        setTimeout(() => {
+            window.location.href = '../index.html';
+        }, 2500);
+
+    } catch (error) {
+        console.error('Submission failed:', error);
+        if (submitBtn) {
+            submitBtn.textContent = originalBtnText;
+            submitBtn.disabled = false;
+        }
+        showModal('Failed to submit. Please check your internet and try again.', 'error');
+    }
+}
+
+/**
+ * selectEmojiRating - Emoji click visual update
+ */
+function selectEmojiRating(ratingValue) {
+    const ratingInput = document.getElementById('feedback-rating');
+    if (ratingInput) ratingInput.value = ratingValue;
+
+    const emojiOptions = document.querySelectorAll('.emoji-option');
+    emojiOptions.forEach((option, index) => {
+        if (index + 1 === ratingValue) {
+            option.style.opacity = "1";
+            option.style.transform = "scale(1.2)";
+        } else {
+            option.style.opacity = "0.5";
+            option.style.transform = "scale(1)";
+        }
+    });
+}
+
+// Global scope expose
+window.selectEmojiRating = selectEmojiRating;
+
+// Auto-start
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFeedbackPage);
+} else {
+    initFeedbackPage();
+}

@@ -1,118 +1,122 @@
+// ===================================================
+// SIGNUP.JS - Signup/Registration Page JavaScript
+// ===================================================
+// User registration form handling
+
+// ===========================================
+// PAGE INITIALIZATION
+// ===========================================
+
+function initSignupPage() {
+    console.log('📝 Initializing signup page...');
+
+    // Already logged in-ஆ இருந்தா home page-க்கு redirect
+    if (isLoggedIn()) {
+        showModal('You are already logged in!', 'info');
+        redirectTo('../index.html', 1000);
+        return;
+    }
+
+    // Signup form setup
+    setupSignupForm();
+}
+
+// ===========================================
+// SIGNUP FORM HANDLING
+// ===========================================
+
 /**
- * Signup Page JavaScript
- * Handles user registration functionality
+ * setupSignupForm - Signup form events setup பண்ணும்
  */
+function setupSignupForm() {
+    const signupForm = document.getElementById('signup-form');
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Check if already logged in
-    if (isAuthenticated()) {
-        const user = getUser();
-        if (user) {
-            if (user.role === 'seller') {
-                window.location.href = './seller_dashboard.html';
-            } else {
-                window.location.href = '../index.html';
-            }
-            return;
-        }
+    if (!signupForm) {
+        console.warn('Signup form not found');
+        return;
     }
 
-    const signupForm = document.querySelector('form');
-    const submitButton = document.querySelector('button[type="submit"]');
+    // Form submit event
+    signupForm.addEventListener('submit', handleSignupSubmit);
 
-    // Create error/success message containers
-    if (!document.getElementById('error-message')) {
-        const errorDiv = document.createElement('div');
-        errorDiv.id = 'error-message';
-        errorDiv.style.display = 'none';
-        errorDiv.style.color = 'red';
-        errorDiv.style.marginBottom = '15px';
-        errorDiv.style.padding = '10px';
-        errorDiv.style.backgroundColor = '#ffe6e6';
-        errorDiv.style.borderRadius = '5px';
-        signupForm.insertBefore(errorDiv, signupForm.firstChild);
+    console.log('✅ Signup form initialized');
+}
+
+/**
+ * handleSignupSubmit - Signup form submit handle பண்ணும்
+ * @param {Event} e - Submit event
+ */
+async function handleSignupSubmit(e) {
+    e.preventDefault(); // Page reload prevent பண்ணுறோம்
+
+    try {
+        // Form data எடுக்குறோம்
+        const userData = {
+            username: document.getElementById('name')?.value.trim(), // Backend 'username' expect பண்றது
+            email: document.getElementById('email')?.value.trim(),
+            phone: document.getElementById('phone')?.value.trim(),
+            password: document.getElementById('password')?.value,
+            confirmPassword: document.getElementById('confirm-password')?.value,
+            role: document.getElementById('role')?.value || 'buyer',
+            address: '' // Address removed from UI
+        };
+
+        // Validation (auth.js-ல defined)
+        if (!validateRegisterForm(userData)) {
+            return;
+        }
+
+        // confirmPassword remove பண்ணுறோம் (backend-க்கு தேவையில்ல)
+        delete userData.confirmPassword;
+
+        // Registration API call (auth.js-ல defined)
+        const result = await register(userData);
+
+        if (result.success) {
+            // Registration success - Login page-க்கு redirect
+            showModal('Registration successful! Redirecting to login...', 'success');
+            redirectTo('./login.html', 2000);
+        }
+
+    } catch (error) {
+        console.error('Signup error:', error);
     }
+}
 
-    if (!document.getElementById('success-message')) {
-        const successDiv = document.createElement('div');
-        successDiv.id = 'success-message';
-        successDiv.style.display = 'none';
-        successDiv.style.color = 'green';
-        successDiv.style.marginBottom = '15px';
-        successDiv.style.padding = '10px';
-        successDiv.style.backgroundColor = '#e6ffe6';
-        successDiv.style.borderRadius = '5px';
-        signupForm.insertBefore(successDiv, signupForm.firstChild);
+// ===========================================
+// ADDITIONAL FUNCTIONS
+// ===========================================
+
+/**
+ * goToLogin - Login page-க்கு redirect பண்ணும்
+ */
+function goToLogin() {
+    window.location.href = './login.html';
+}
+
+/**
+ * togglePasswordVisibility - Password காட்ட/மறைக்க
+ * @param {string} fieldId - Password field ID
+ */
+function togglePasswordVisibility(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+
+    if (field.type === 'password') {
+        field.type = 'text';
+    } else {
+        field.type = 'password';
     }
+}
 
-    signupForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
+// ===========================================
+// AUTO-INITIALIZATION
+// ===========================================
 
-        // Get form values
-        const username = document.getElementById('username')?.value.trim();
-        const email = document.getElementById('email')?.value.trim();
-        const password = document.getElementById('password')?.value;
-        const confirmPassword = document.getElementById('confirm-password')?.value;
-        const phone = document.getElementById('phone')?.value.trim();
-        const location = document.getElementById('location')?.value.trim() || '';
-        const farmName = document.getElementById('farm-name')?.value.trim() || '';
-        const address = location || farmName || 'Not provided';
-        const role = document.getElementById('role')?.value;
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSignupPage);
+} else {
+    initSignupPage();
+}
 
-        // Validation
-        if (!username || !email || !password || !phone || !role) {
-            showError('Please fill in all required fields');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            showError('Passwords do not match');
-            return;
-        }
-
-        if (password.length < 6) {
-            showError('Password must be at least 6 characters long');
-            return;
-        }
-
-        // Show loading state
-        const originalButtonText = submitButton.innerHTML;
-        showLoading(submitButton);
-
-        try {
-            // Prepare signup data
-            const signupData = {
-                username: username,
-                email: email,
-                password: password,
-                phone: phone,
-                address: address,
-                role: role
-            };
-
-            // Make signup request
-            const response = await apiPost(API_CONFIG.AUTH.SIGNUP, signupData);
-
-            // Save token and user data
-            saveToken(response.access_token);
-            saveUser(response.user);
-
-            // Show success message
-            showSuccess('Account created successfully! Redirecting...');
-
-            // Redirect based on role
-            setTimeout(() => {
-                if (response.user && response.user.role === 'seller') {
-                    window.location.href = './seller_dashboard.html';
-                } else {
-                    window.location.href = '../index.html';
-                }
-            }, 1500);
-
-        } catch (error) {
-            console.error('Signup error:', error);
-            showError(error.message || 'Signup failed. Please try again.');
-            hideLoading(submitButton, originalButtonText);
-        }
-    });
-});
+console.log('✅ Signup.js loaded successfully!');

@@ -248,26 +248,31 @@
             <h2>Order Confirmed!</h2>
             <p class="instruction">Your order has been successfully placed.</p>
 
-            <div class="transaction-details">
-                <div class="detail-row">
-                    <span class="detail-label from">Payment Method:</span>
-                    <span class="detail-value from">Cash on Delivery</span>
+            <div class="transaction-details" style="text-align: left;">
+                <div id="product-info-container"
+                    style="display: flex; gap: 15px; align-items: center; margin-bottom: 20px; padding: 15px; background: white; border-radius: 12px; border: 1px solid #e8f5e9;">
+                    <img id="product-image" src="../assets/images/placeholder.png"
+                        style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 1px solid #eee;">
+                    <div style="flex: 1;">
+                        <h4 id="product-name-display" style="margin: 0; color: #1b5e20; font-size: 1.1rem;">Product Name
+                        </h4>
+                        <p id="payment-method-desc" style="margin: 5px 0 0; font-size: 0.85rem; color: #666;">Paid via
+                            Cash on Delivery</p>
+                    </div>
                 </div>
+
                 <div class="detail-row">
-                    <span class="detail-label to">Transaction ID:</span>
-                    <span class="detail-value to">#TXN99887766</span>
+                    <span class="detail-label amount">Amount Paid:</span>
+                    <span class="detail-value total" id="order-total-display">₹ 0.00</span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label amount">Subtotal:</span>
-                    <span class="detail-value amount">$890.00</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label commission">Delivery:</span>
-                    <span class="detail-value commission">Free</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label total">Total Paid:</span>
-                    <span class="detail-value total">$890.00</span>
+
+                <div style="margin-top: 20px;">
+                    <a id="track-order-link" href="Track.html" style="text-decoration: none;">
+                        <button class="action-button confirm-button"
+                            style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <i class="material-icons">local_shipping</i> TRACK YOUR ORDER
+                        </button>
+                    </a>
                 </div>
             </div>
 
@@ -279,31 +284,61 @@
     </div>
     <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function () {
             const urlParams = new URLSearchParams(window.location.search);
             const orderId = urlParams.get('id');
-            const transIdEl = document.querySelector('.detail-value.to');
-            const totalEl = document.querySelector('.detail-value.total');
-            const subtotalEl = document.querySelector('.detail-value.amount');
+            const total = urlParams.get('total');
+
+            const productNameEl = document.getElementById('product-name-display');
+            const totalEl = document.getElementById('order-total-display');
+            const trackLinkEl = document.getElementById('track-order-link');
+            const trackBtnEl = document.querySelector('.cancel-button')?.parentElement;
+            const productImageEl = document.getElementById('product-image');
 
             if (orderId) {
-                if (transIdEl) transIdEl.textContent = '#' + orderId;
+                // Update tracking links
+                if (trackLinkEl) trackLinkEl.href = `Track.html?id=${orderId}`;
+                if (trackBtnEl) trackBtnEl.href = `Track.html?id=${orderId}`;
+
+                // Set initial total from URL for speed
+                if (total && totalEl) {
+                    totalEl.textContent = formatPrice(parseFloat(total));
+                }
 
                 try {
-                    const order = await apiGet(`${API_CONFIG.ORDERS.BASE}/${orderId}`);
-                    const formattedTotal = formatPrice(order.total_amount);
-                    if (totalEl) totalEl.textContent = formattedTotal;
-                    if (subtotalEl) subtotalEl.textContent = formattedTotal;
+                    // Fetch fresh details from API
+                    const order = await getOrderById(orderId);
+                    if (order) {
+                        // Display product names
+                        if (order.items && order.items.length > 0) {
+                            const firstItem = order.items[0];
+                            const productNames = order.items.map(item => item.product_name).join(', ');
 
-                    // Update Track button link
-                    const trackBtn = document.querySelector('.cancel-button').parentElement;
-                    if (trackBtn) trackBtn.href = `Track.html?id=${orderId}`;
+                            if (productNameEl) {
+                                productNameEl.textContent = productNames.length > 50 ? productNames.substring(0, 47) + '...' : productNames;
+                            }
+
+                            // Update image from first item
+                            if (productImageEl && firstItem.image_url) {
+                                productImageEl.src = firstItem.image_url;
+                            }
+                        }
+
+                        const finalPrice = order.total_amount || order.total || total;
+                        if (totalEl && finalPrice) {
+                            totalEl.textContent = formatPrice(finalPrice);
+                        }
+                    }
                 } catch (e) {
-                    console.error('Failed to load order details for success page', e);
+                    console.warn('Failed to fetch detailed order info', e);
                 }
+            } else {
+                if (productNameEl) productNameEl.textContent = "Order Placed Successfully";
             }
         });
     </script>

@@ -5,133 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Order - UZHAVAN PLANET</title>
+    <link rel="stylesheet" href="../css/common_ui.css">
     <link rel="stylesheet" href="../css/Track.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Order Item Details */
-        .order-summary {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .item-image {
-            width: 90px;
-            height: 90px;
-            background-color: #c9d5c4;
-            /* Placeholder color for the product image */
-            margin-right: 15px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #4a5d43;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .item-info p {
-            margin: 0;
-            font-size: 0.9em;
-            color: #555;
-        }
-
-        .price {
-            font-weight: bold;
-            color: #000;
-            font-size: 1.3em;
-            margin-top: 5px;
-        }
-
-        /* Tracking Timeline Structure */
-        .tracking-timeline {
-            position: relative;
-            padding-left: 20px;
-            margin-top: 20px;
-        }
-
-        /* Vertical Line */
-        .tracking-timeline::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 10px;
-            width: 3px;
-            background-color: #ddd;
-            /* Light gray line */
-        }
-
-        .step {
-            position: relative;
-            margin-bottom: 35px;
-            padding-left: 30px;
-        }
-
-        .circle {
-            position: absolute;
-            left: 0px;
-            top: 0;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: #ddd;
-            border: 3px solid white;
-            z-index: 1;
-        }
-
-        .step p {
-            margin: 0;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #888;
-            /* Default status color */
-            font-size: 1.05em;
-        }
-
-        /* Active/Done Step Styles */
-        .step-active .circle {
-            background-color: #4CAF50;
-            /* Green for done steps */
-        }
-
-        /* Current Step (Near By) */
-        .step-current .circle {
-            background-color: #ff9800;
-            /* Orange/Yellow for current step */
-            box-shadow: 0 0 0 5px rgba(255, 152, 0, 0.2);
-        }
-
-        .step-active p,
-        .step-current p {
-            color: #000;
-            /* Dark text for active/current status */
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-    <nav class="navbar"
-        style="background: linear-gradient(135deg, #1b5e20, #4a7c44); padding: 10px 5%; display: flex; align-items: center; justify-content: space-between;">
-        <a href="../index.html" class="logo-section"
-            style="display: flex; align-items: center; text-decoration: none; color: white;">
-            <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo"
-                style="height: 40px; border-radius: 50%; margin-right: 15px;">
-            <h1 style="font-size: 1.5rem; margin: 0; color: white;">UZHAVAN PLANET</h1>
-        </a>
-        <div class="nav-links">
-            <a href="../index.html"
-                style="color: white; text-decoration: none; margin-left: 20px; font-weight: 500;">Home</a>
-            <a href="products_page.html"
-                style="color: white; text-decoration: none; margin-left: 20px; font-weight: 500;">Shop</a>
-            <a href="address.html"
-                style="color: white; text-decoration: none; margin-left: 20px; font-weight: 500;">Address</a>
-            <a href="Track.html" style="color: white; text-decoration: none; margin-left: 20px; font-weight: 500;">Track
-                Order</a>
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html">🛒 cart</a>
+            </div>
         </div>
-    </nav>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="./products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html">Profile</a>
+        </nav>
+    </header>
 
     <div class="main-content">
         <h2>📦 Track Order</h2>
@@ -168,8 +75,56 @@
         </div>
     </div>
 
+    <section class="extended-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Uzhavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing communities.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
+                    <li><a href="./user_details.html">User Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Site Menu</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="./products_page.html">Shop All</a></li>
+                    <li><a href="./About_page.html">About Us</a></li>
+                    <li><a href="./best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./feedback.html">Feedback</a></li>
+                    <li><a href="./report.html">Support</a></li>
+                    <li><a href="./user_details.html">Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
+    </footer>
+
     <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/track.js"></script>

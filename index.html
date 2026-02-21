@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UZHAVAN PLANET - Organic Seeds & Premium Farming Supplies</title>
+    <link rel="stylesheet" href="./css/common_ui.css" />
     <link rel="stylesheet" href="./css/index.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
@@ -14,9 +15,9 @@
 
     <header>
         <div class="top-bar">
-            <div class="logo" style="align-items: center;display: flex; gap: 20px;">
-                <img src="./assets/images/logoooo.png" alt="Uzhavan Planet Logo" height="30px"> <strong>UZHAVAN PLANET</strong>
-
+            <div class="logo">
+                <img src="./assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
             </div>
             <div class="search-bar">
                 <input type="text" placeholder="Search products ....">
@@ -32,7 +33,6 @@
             <a href="index.html">Home</a>
             <a href="./pages/products_page.html">Shop All</a>
             <a href="./pages/About_page.html">About Us</a>
-            <a href="./pages/categories.html">Brands</a>
             <a href="./pages/best_selling_page.html">Best Sellers</a>
             <a href="./pages/feedback.html">Feedback</a>
             <a href="./pages/report.html">Support</a>
@@ -43,9 +43,10 @@
     <section class="slider">
 
         <div class="slide">
-
-            <h2>Welcome to Uzhavan Planet </h2>
-            <p>Fresh. Organic. Direct from Farmers.</p>
+            <h2>Nurturing Nature,<br>Empowering Farmers</h2>
+            <p>Premium Organic Seeds & Farming Supplies</p>
+            <a href="./pages/products_page.html" class="atc-btn"
+                style="display: inline-block; text-decoration: none; margin-top: 20px;">Shop Collection</a>
         </div>
     </section>
 
@@ -59,13 +60,6 @@
         </div>
         <br>
         <h3 class="category-title"></h3>
-
-        <div class="product-grid">
-            <!-- Dynamic Content Loading -->
-        </div>
-        <br><br> <br>
-        <h3 class="category-title popular-title"> </h3>
-
         <div class="product-grid">
             <!-- Dynamic Content Loading -->
         </div>
@@ -82,9 +76,7 @@
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="./pages/categories.html">Brands</a></li>
                     <li><a href="./pages/products_page.html">Seed Collection</a></li>
-                    <li><a href="./pages/categories.html">Crop Protection</a></li>
                     <li><a href="./pages/products_page.html">Fruits & Vegetables</a></li>
                     <li><a href="./pages/Track.html">Track Order</a></li>
                     <li><a href="./pages/About_page.html">About Us Our Story</a></li>
@@ -92,13 +84,15 @@
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Ethula Fooder</h3>
+                <h3>Site Menu</h3>
                 <ul>
-                    <li><a href="./pages/categories.html">Cattle Feed</a></li>
-                    <li><a href="./pages/categories.html">Poultry Feed</a></li>
-                    <li><a href="./pages/categories.html">Fish Feed</a></li>
-                    <li><a href="./pages/categories.html">Organic Fodder</a></li>
-                    <li><a href="./pages/categories.html">Feed Supplements</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="./pages/products_page.html">Shop All</a></li>
+                    <li><a href="./pages/About_page.html">About Us</a></li>
+                    <li><a href="./pages/best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./pages/feedback.html">Feedback</a></li>
+                    <li><a href="./pages/report.html">Support</a></li>
+                    <li><a href="./pages/user_details.html">Profile</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -117,10 +111,12 @@
         <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
     </footer>
 
-    <!-- JavaScript Files -->
+    <!-- JavaScript Files (Load order matters!) -->
     <script src="./js/config.js"></script>
-    <script src="./js/auth.js"></script>
+    <script src="./js/utils.js"></script>
     <script src="./js/api.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/common.js"></script>
     <script src="./js/index.js"></script>
 </body>
 

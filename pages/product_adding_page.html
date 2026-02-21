@@ -4,78 +4,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Add Product - UZHAVAN PLANET</title>
+    <link rel="stylesheet" href="../css/common_ui.css">
     <link rel="stylesheet" href="../css/product_adding_page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
-    <header class="header">
-        <div class="logo-container">
-            <a href="../index.html" class="logo-link">
-                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo" class="circle-icon">
-                <span class="logo-text">UZHAVAN PLANET</span>
-            </a>
+    <!-- Standard Header -->
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html">🛒 cart</a>
+            </div>
         </div>
-        <nav class="navbar">
-            <a href="../index.html">HOME</a>
-            <a href="products_page.html">SHOP</a>
-            <a href="About_page.html">ABOUT</a>
-            <a href="best_selling_page.html">BEST SELLERS</a>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="./products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html">Profile</a>
         </nav>
     </header>
     <section class="product-adding-section">
         <div class="product-adding-container">
             <h2>Add New Product</h2>
-            <form action="">
+            <form id="add-product-form">
                 <div class="form-group">
-                    <label for="product-name">Product Name</label>
-                    <input type="text" id="product-name" name="product-name" required>
+                    <label for="name">Product Name <span style="color: red;">*</span></label>
+                    <input type="text" id="name" name="name" required placeholder="Enter product name">
                 </div>
+
                 <div class="form-group">
-                    <label for="product-description">Description</label>
-                    <textarea id="product-description" name="product-description" required></textarea>
+                    <label for="category">Category <span style="color: red;">*</span></label>
+                    <select id="category" name="category" required onchange="toggleNewCategoryInput()">
+                        <option value="">Select Category</option>
+                        <!-- Categories will be loaded dynamically -->
+                        <option value="new">+ Create New Category</option>
+                    </select>
+
+                    <div id="new-category-container" style="display: none; margin-top: 10px;">
+                        <input type="text" id="new-category-name"
+                            placeholder="Enter new category name (e.g., Exotic Seeds)"
+                            style="border: 2px solid #2e7d32; background-color: #f1f8e9;">
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="product-price">Price</label>
-                    <input type="number" id="product-price" name="product-price" required>
+                    <label for="description">Description <span style="color: red;">*</span></label>
+                    <textarea id="description" name="description" required rows="4"
+                        placeholder="Describe your product..."></textarea>
                 </div>
+
+                <div class="form-row" style="display: flex; gap: 20px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="price">Price (₹) <span style="color: red;">*</span></label>
+                        <input type="number" id="price" name="price" required min="1" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="stock">Stock Quantity <span style="color: red;">*</span></label>
+                        <input type="number" id="stock" name="stock" required min="1" placeholder="Available quantity">
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label for="product-images">Images (Select 3-4)</label>
+                    <label for="product-images">Product Images (Max 3) <span style="color: red;">*</span></label>
                     <input type="file" id="product-images" name="product-images" multiple accept="image/*" required>
+                    <small style="color: #666;">Select up to 3 images. First image will be the main image.</small>
+                    <div id="image-preview" style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap;"></div>
                 </div>
-                <button type="submit">Add Product</button>
+
+                <button type="submit" class="btn-submit"
+                    style="width: 100%; padding: 12px; background: #1b5e20; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; margin-top: 20px;">
+                    Add Product 🚀
+                </button>
             </form>
         </div>
     </section>
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-logo">
-                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
-                <span>UZHAVAN PLANET</span>
+    <!-- Standard Footer -->
+    <section class="extended-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Uzhavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing communities.</p>
             </div>
-            <div class="footer-links">
-                <h4>Quick Links</h4>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="products_page.html">Shop</a></li>
-                    <li><a href="About_page.html">About</a></li>
-                    <li><a href="best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./categories.html">Brands</a></li>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./categories.html">Crop Protection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
                 </ul>
             </div>
-            <div class="footer-contact">
-                <h4>Contact Us</h4>
-                <p>Email: ulavanplanet@gmail.com</p>
-                <p>Phone: +94 77 123 4567</p>
+            <div class="footer-col">
+                <h3>Site Menu</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="./products_page.html">Shop All</a></li>
+                    <li><a href="./About_page.html">About Us</a></li>
+                    <li><a href="./best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./feedback.html">Feedback</a></li>
+                    <li><a href="./report.html">Support</a></li>
+                    <li><a href="./user_details.html">Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2023 Uzhavan Planet. All rights reserved.</p>
-        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
     </footer>
     <!-- JavaScript Files -->
+    <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/product-add.js"></script>
 
 </body>

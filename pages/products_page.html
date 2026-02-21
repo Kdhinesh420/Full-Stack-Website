@@ -5,41 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UZHAVAN PLANET - Premium Seed Shop</title>
+    <link rel="stylesheet" href="../css/common_ui.css">
     <link rel="stylesheet" href="../css/page2.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
 
-    <header class="header">
-        <div class="logo"><img src="../assets/images/logoooo.png" alt="">UZHAVAN PLANET</div>
-        <nav class="navbar">
-            <a href="../index.html">Home</a>
-            <a href="products_page.html">Shop All</a>
-            <a href="categories.html">Brands</a>
-            <a href="best_selling_page.html">Best Sellers</a>
-            <a href="About_page.html">About Us</a>
-            <a href="feedback.html">Feedback</a>
-        </nav>
-        <div class="nav-icons">
-            <div class="search-container" id="searchContainer"
-                style="display: none; position: absolute; top: 70px; right: 5%; background: white; padding: 15px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 300px; z-index: 1001; border: 1px solid #e0e0e0;">
-                <form id="searchForm" style="display: flex; align-items: center; gap: 10px;">
-                    <input type="text" id="searchInput" placeholder="Search seeds..."
-                        style="flex: 1; border: none; outline: none; padding: 5px 15px; font-size: 0.95rem; color: #333; background: #f5f5f5; border-radius: 20px;">
-                    <button type="submit"
-                        style="background: #2e7d32; color: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer;"><i
-                            class="fas fa-search"></i></button>
-                </form>
+    <!-- Standard Header -->
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
             </div>
-            <i class="fas fa-search" id="searchToggle" style="cursor: pointer;"></i>
-            <a href="user_details.html" style="color: inherit;"><i class="fas fa-user"></i></a>
-            <a href="cart.html" style="color: inherit;"><i class="fas fa-shopping-cart"></i></a>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html">🛒 cart</a>
+            </div>
         </div>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="products_page.html" class="active">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html">Profile</a>
+        </nav>
     </header>
 
     <section class="hero-carousel">
-        <div class="carousel-item active"><video src="../assets/images/Video_Generation_From_Prompt.mp4" autoplay muted
+        <div class="carousel-item active"><video src="../assets/images/Uzhavan_Planet_Video_Ready.mp4" autoplay muted
                 loop width="100%"></video>
             <div class="overlay"></div>
             <div class="carousel-content">
@@ -47,46 +49,123 @@
         </div>
     </section>
 
-    <section class="info-banner">
-        <div class="info-number">850</div>
-        <p>In store or online your health & safety is our top priority.<br>Pre-only supermarket that makes your life
-            easier, fresher you may like makes it right</p>
+
+
+    <section class="products-main-layout">
+        <!-- Filter Sidebar -->
+        <aside class="sidebar">
+            <div class="filter-group">
+                <h3><i class="fas fa-filter"></i> Filters</h3>
+                <button class="clear-btn" onclick="clearFilters()">Clear All</button>
+            </div>
+
+            <div class="filter-group">
+                <label>Category</label>
+                <select id="category-filter">
+                    <!-- JS (products.js) - loadCategoryDropdown() function automatically fill pannum -->
+                    <!-- Backend-l irukka real categories varum (Vegetable Seeds, Flower Seeds, etc.) -->
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Price Range (₹)</label>
+                <div class="price-inputs">
+                    <input type="number" id="min-price" placeholder="Min" min="0">
+                    <span>-</span>
+                    <input type="number" id="max-price" placeholder="Max" min="0">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Search Within</label>
+                <div class="side-search">
+                    <input type="text" id="side-search-input" placeholder="Search brands, names...">
+                </div>
+            </div>
+
+            <div class="filter-group mobile-only">
+                <button class="apply-btn" onclick="loadProducts()">Apply Filters</button>
+            </div>
+        </aside>
+
+        <!-- Product Display Area -->
+        <div class="products-content">
+            <div class="section-header">
+                <h1 id="page-title">| All Products</h1>
+                <div class="sort-box">
+                    <label>Sort By:</label>
+                    <select id="sort-select" onchange="handleSortChange(this.value)">
+                        <option value="newest">Newest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="popular">Popularity</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="product-grid">
+                <!-- Dynamic Content Loading From products.js -->
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #10b981;"></i>
+                    <p>Fetching products...</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section class="product-section">
-        <div class="section-header">
-            <h2>| Just For You</h2>
-            <a href="products_page.html" class="see-all">See All</a>
-        </div>
-
-        <h3 class="category-title">SEEDS</h3>
-
-        <div class="product-grid">
-            <!-- Dynamic Content -->
-        </div>
-
-        <h3 class="category-title popular-title">popular products</h3>
-
-        <div class="product-grid" style="display: none;">
-            <!-- Hidden second grid -->
+    <!-- Standard Footer -->
+    <section class="extended-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Uzhavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing communities.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Site Menu</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="./products_page.html">Shop All</a></li>
+                    <li><a href="./About_page.html">About Us</a></li>
+                    <li><a href="./best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./feedback.html">Feedback</a></li>
+                    <li><a href="./report.html">Support</a></li>
+                    <li><a href="./user_details.html">Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer class="footer-banner">
-        <div class="text-content">
-            <p class="tagline">LET'S GET HEALTHIER</p>
-            <h2>Respect Nature, <br>Gain Benefits</h2>
-            <a href="About_page.html" class="contact-btn">Contact Us ></a>
-        </div>
-        <div class="image-content" style="background-image: url('../assets/images/fruits.webp');">
-        </div>
-        <div class="made-in-bolt"></div>
+    <footer>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
     </footer>
 
     <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/products.js"></script>
 </body>
 

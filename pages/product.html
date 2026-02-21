@@ -5,155 +5,152 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UZHAVAN PLANET - Dahlia Seeds</title>
+    <link rel="stylesheet" href="../css/common_ui.css">
     <link rel="stylesheet" href="../css/product.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
 
-    <header class="main-header">
-        <div class="header-content-wrapper">
-            <div class="logo-container">
-                <a href="../index.html">
-                    <img class="circle-icon" src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
-                    <h1>UZHAVAN PLANET</h1>
-                </a>
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
             </div>
-            <nav class="main-nav">
-                <a href="../index.html">Home</a>
-                <a href="products_page.html">Shop</a>
-                <a href="Track.html">Track Order</a>
-                <a href="feedback.html">Feedback</a>
-                <a href="user_details.html">Profile</a>
-            </nav>
-            <div class="header-actions">
-                <button onclick="history.back()" class="back-btn-header">← Back</button>
-                <a href="login.html">Login</a>
-                <a href="cart.html">Cart (2)</a>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html">🛒 cart</a>
             </div>
         </div>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html">Profile</a>
+        </nav>
     </header>
+
     <main class="product-view-container">
         <section class="product-image-section">
-            <div class="main-image-placeholder"> <img
-                    src="../assets/images/Gemini_Generated_Image_gqan3ygqan3ygqan (1).png" alt="">
-
+            <div class="main-image-placeholder">
+                <img id="main-product-image" src="../assets/images/placeholder.png" alt="Product Image">
             </div>
-            <div class="thumbnails">
-                <div class="thumbnail active"><img
-                        src="../assets/images/Gemini_Generated_Image_gqan3ygqan3ygqan (1).png" alt=""></div>
-                <div class="thumbnail"><img src="../assets/images/Gemini_Generated_Image_gqan3ygqan3ygqan (2).png"
-                        alt=""></div>
-                <div class="thumbnail"><img src="../assets/images/Gemini_Generated_Image_gqan3ygqan3ygqan.png" alt="">
-                </div>
+            <div class="thumbnails" id="image-thumbnails">
+                <!-- Dynamic Thumbnails -->
             </div>
         </section>
 
         <section class="product-details-section">
-            <p class="product-category">product</p>
-            <h2 class="product-title">seeds - flower seeds 98% -organic</h2>
-
-            <div class="rating-info">
-                <span class="stars">★★★★☆</span>
-                <span class="score">4.0</span>
-                <span class="review-count">(17 reviews)</span>
-            </div>
+            <p id="product-category" class="product-category">Category</p>
+            <h2 id="product-name" class="product-title">Product Name</h2>
 
             <div class="price-and-offer">
                 <div class="price-box">
-                    <span class="current-price">₹ 389</span>
-                    <span class="original-price">₹ 940</span>
-                    <span class="discount-tag">59% OFF</span>
+                    <span id="product-price" class="current-price">₹ 0</span>
+                    <span id="original-price" class="original-price" style="display:none;">₹ 0</span>
+                    <span id="discount-tag" class="discount-tag" style="display:none;">0% OFF</span>
                 </div>
-                <p class="save-detail">% SAVE ₹ 551</p>
+                <p id="product-stock" style="margin-top: 10px; font-weight: 600;">Checking stock...</p>
+                <p id="product-seller" style="font-size: 0.9rem; color: #666;">Sold by: Farmer</p>
             </div>
 
-            <div class="variants-section">
-                <h3>Select Variant:</h3>
-                <div class="variant-type-group">
-                    <button class="variant-btn active-variant">single pack</button>
-                    <button class="variant-btn">multi pack</button>
+            <div class="buying-actions" style="margin-top: 25px;">
+                <div class="quantity-selector"
+                    style="margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                    <label style="font-weight: 600;">Quantity:</label>
+                    <div
+                        style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; background: white;">
+                        <button onclick="changeQuantity(-1)"
+                            style="padding: 8px 15px; background: #f8f9fa; border: none; cursor: pointer; font-weight: bold; border-right: 1px solid #ddd; transition: all 0.3s;">−</button>
+                        <input type="number" id="quantity-input" value="1" min="1" readonly
+                            style="width: 50px; padding: 8px; border: none; text-align: center; font-weight: 600; appearance: textfield; -moz-appearance: textfield;">
+                        <button onclick="changeQuantity(1)"
+                            style="padding: 8px 15px; background: #f8f9fa; border: none; cursor: pointer; font-weight: bold; border-left: 1px solid #ddd; transition: all 0.3s;">+</button>
+                    </div>
                 </div>
 
-                <h3>Select Size (800 gms):</h3>
-                <div class="variant-size-group">
-                    <button class="size-btn">25 kgs<br>5881 ₹</button>
-                    <button class="size-btn">12.5 kgs<br>3199 ₹</button>
-                    <button class="size-btn active-size">800 gms<br>389 ₹</button>
-                    <button class="size-btn">400 gms<br>285 ₹</button>
-                    <button class="size-btn">2 kgs<br>500 ₹</button>
+                <div class="action-buttons">
+                    <button class="buy-now-btn" onclick="buyNow()">BUY NOW</button>
+                    <button id="add-to-cart-btn" class="add-to-cart-btn">ADD TO CART</button>
                 </div>
-            </div>
-
-            <div class="action-buttons">
-                <a href="conform.html"><button class="buy-now-btn">BUY NOW</button></a>
-                <a href="cart.html"><button class="add-to-cart-btn">ADD TO CART</button></a>
             </div>
         </section>
 
-        <section class="product-overview-section">
-            <h2 class="section-heading">overview</h2>
+        <section class="product-overview-section" style="grid-column: 1 / -1;">
+            <h2 class="section-heading">Overview</h2>
             <div class="detail-grid">
-                <div class="detail-item">
-                    <span class="label">P. Name</span>
-                    <span class="value">Flower Seeds</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Brand</span>
-                    <span class="value">ULAVAN</span>
-                </div>
-                <div class="detail-item">
-                    <span class="label">Weight</span>
-                    <span class="value">800 gms</span>
-                </div>
                 <div class="detail-item full-width">
-                    <span class="label">P. Details (Description)</span>
-                    <span class="value description-text">
-                        Dahlias are one of the most rewarding plants and once you grow a dahlia, you dont go back. With
-                        a seemingly endless supply of varieties, there is a dahlia for every gardener. These sun-loving
-                        plants need full sun for 6-8 hours in a well draining soil. Grow them in containers or as
-                        borders in your garden.
+                    <span class="label"
+                        style="display: block; margin-bottom: 10px; font-weight: 700; color: #1b5e20;">Description</span>
+                    <span id="product-description" class="value description-text">
+                        Product description goes here...
                     </span>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="extended-footer">
+    <!-- Standard Footer -->
+    <section class="extended-footer">
         <div class="footer-grid">
             <div class="footer-col">
-                <h3>UZHAVAN PLANET</h3>
-                <p>Connecting nature with your home. We provide premium quality seeds, fertilizers, and organic farming
-                    tools for a sustainable future.</p>
+                <h3>Uzhavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing communities.</p>
             </div>
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="../index.html">Home</a></li>
-                    <li><a href="best_selling_page.html">Shop Best Sellers</a></li>
-                    <li><a href="About_page.html">About Our Mission</a></li>
-                    <li><a href="report.html">Report an Issue</a></li>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Support</h3>
+                <h3>Site Menu</h3>
                 <ul>
-                    <li><a href="track.html">Track Order</a></li>
-                    <li><a href="address.html">Manage Address</a></li>
-                    <li><a href="feedback.html">Share Feedback</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="./products_page.html">Shop All</a></li>
+                    <li><a href="./About_page.html">About Us</a></li>
+                    <li><a href="./best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./feedback.html">Feedback</a></li>
+                    <li><a href="./report.html">Support</a></li>
+                    <li><a href="./user_details.html">Profile</a></li>
                 </ul>
             </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
+            </div>
         </div>
-    </footer>
+    </section>
 
     <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/api.js"></script>
-    <script src="../js/product-detail.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/product.js"></script>
 
     <footer>
-        <p>&copy; 2026 UZHAVAN PLANET. All rights reserved. | Growing together with nature.</p>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
     </footer>
 
 </html>

@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bestselling Seeds & Supplies - Uzhavan Planet</title>
+    <link rel="stylesheet" href="../css/common_ui.css">
     <link rel="stylesheet" href="../css/best_selling_page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -14,45 +16,32 @@
 <body>
 
     <!-- Header & Navigation -->
-    <header class="bg-white shadow-md sticky top-0 z-10">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <!-- Logo - Uzhavan Planet (Seedling icon) -->
-            <a href="../index.html" class="text-2xl font-bold text-green-700 tracking-wide flex items-center">
-                <span class="text-green-500 mr-2 text-3xl"><img src="../assets/images/logoooo.png" alt="" height="70px"
-                        width="70px" class="border rounded-full "></span> Uzhavan Planet
-            </a>
-            <!-- Navigation Links -->
-            <nav class="hidden md:flex space-x-8 text-gray-600">
-                <a href="../index.html" class="hover:text-green-700">Home</a>
-                <a href="products_page.html" class="hover:text-green-700">Shop All</a>
-                <a href="categories.html" class="hover:text-green-700">Brands</a>
-                <a href="best_selling_page.html" class="hover:text-green-700 font-bold text-green-700">Bestsellers</a>
-                <a href="About_page.html" class="hover:text-green-700">About Us</a>
-                <a href="feedback.html" class="hover:text-green-700">Feedback</a>
-            </nav>
-            <!-- Cart/User Icon -->
-            <div class="flex items-center space-x-4">
-                <button class="text-gray-600 hover:text-green-700 p-2 rounded-full hover:bg-green-50">
-                    <!-- User Icon -->
-                    <a href="login.html"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg></a>
-                </button>
-                <button class="text-gray-600 hover:text-green-700 p-2 rounded-full hover:bg-green-50">
-                    <!-- Shopping Cart Icon -->
-                    <a href="cart.html"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="9" cy="21" r="1" />
-                            <circle cx="20" cy="21" r="1" />
-                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                        </svg></a>
-                </button>
+    <!-- Standard Header -->
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html">🛒 cart</a>
             </div>
         </div>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="./products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./best_selling_page.html" class="active">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html">Profile</a>
+        </nav>
     </header>
 
     <!-- Main Content Area -->
@@ -89,7 +78,7 @@
 
         <!-- Product Grid (8 items) -->
         <!-- Product Grid (Dynamic) -->
-        <section id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <section id="product-grid" class="product-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Dynamic Content Loading -->
         </section>
         <!-- End Product Grid -->
@@ -99,68 +88,66 @@
             <h2 class="text-2xl font-bold text-green-800 mb-3">Ready to Grow?</h2>
             <p class="text-lg text-gray-600 mb-6">100% Germination Guarantee. Free Shipping on orders over &#8377;500.
             </p>
-            <a href="categories.html"> <button
+            <a href="products_page.html"> <button
                     class="cta-button bg-green-700 text-white font-bold py-4 px-8 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300">
                     Shop All Seeds Now
                 </button></a>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white mt-12">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <!-- Column 1: Brand Info -->
-                <div>
-                    <h3 class="text-xl font-bold mb-4 flex items-center">
-                        <span class="text-green-400 mr-2 text-2xl">&#x1F331;</span> Uzhavan Planet
-                    </h3>
-                    <p class="text-sm text-gray-400">Your trusted partner for high-quality seeds and gardening supplies.
-                    </p>
-                </div>
-                <!-- Column 2: Quick Links -->
-                <div>
-                    <h4 class="font-semibold text-lg mb-4 text-green-300">Quick Links</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="About_page.html" class="hover:text-green-400">About Us</a></li>
-                        <li><a href="report.html" class="hover:text-green-400">Contact Support</a></li>
-                        <li><a href="categories.html" class="hover:text-green-400">Brands</a></li>
-                        <li><a href="products_page.html" class="hover:text-green-400">Shop All</a></li>
-                    </ul>
-                </div>
-                <!-- Column 3: Categories -->
-                <div>
-                    <h4 class="font-semibold text-lg mb-4 text-green-300">Shop By Category</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="products_page.html" class="hover:text-green-400">Vegetable Seeds</a></li>
-                        <li><a href="products_page.html" class="hover:text-green-400">Flower Seeds</a></li>
-                        <li><a href="categories.html" class="hover:text-green-400">Gardening Tools</a></li>
-                        <li><a href="categories.html" class="hover:text-green-400">Organic Fertilizers</a></li>
-                    </ul>
-                </div>
-                <!-- Column 4: Customer Service -->
-                <div>
-                    <h4 class="font-semibold text-lg mb-4 text-green-300">Support</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="Track.html" class="hover:text-green-400">Track Order</a></li>
-                        <li><a href="address.html" class="hover:text-green-400">Shipping Address</a></li>
-                        <li><a href="feedback.html" class="hover:text-green-400">Provide Feedback</a></li>
-                        <li><a href="report.html" class="hover:text-green-400">Privacy Policy</a></li>
-                    </ul>
-                </div>
+    <!-- Standard Footer -->
+    <section class="extended-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Uzhavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing communities.</p>
             </div>
-
-            <div class="mt-10 pt-6 border-t border-gray-700 text-center">
-                <p class="text-sm text-gray-400">&copy; 2024 Uzhavan Planet. All rights reserved.</p>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Site Menu</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="./products_page.html">Shop All</a></li>
+                    <li><a href="./About_page.html">About Us</a></li>
+                    <li><a href="./best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./feedback.html">Feedback</a></li>
+                    <li><a href="./report.html">Support</a></li>
+                    <li><a href="./user_details.html">Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
             </div>
         </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
     </footer>
 
     <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
-    <script src="../js/bestsellers.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/products.js"></script>
 </body>
 
 </html>

@@ -1,224 +1,444 @@
-/**
- * Products Page JavaScript
- * Handles fetching and displaying all products with filtering options
- */
+// ===================================================
+// PRODUCTS.JS - Products Page JavaScript
+// ===================================================
+// Products listing, filtering, and search
 
-document.addEventListener('DOMContentLoaded', async function () {
-    // UI Elements
-    const productGrid = document.querySelector('.product-grid');
-    const searchIcon = document.querySelector('.fa-search');
+// ===========================================
+// GLOBAL VARIABLES
+// ===========================================
 
-    // Initial State
-    if (productGrid) showLoading(productGrid);
+let allProducts = []; // எல்லா products-ம் store பண்ணுறோம்
+let currentFilters = {
+    category: null,
+    search: null,
+    minPrice: null,
+    maxPrice: null
+};
 
-    // Parse URL parameters for search/filter
-    const urlParams = new URLSearchParams(window.location.search);
-    const searchQuery = urlParams.get('search');
-    const categoryId = urlParams.get('category');
+// ===========================================
+// PAGE INITIALIZATION
+// ===========================================
+
+async function initProductsPage() {
+    console.log('📦 Initializing products page...');
 
     try {
-        // Construct API URL
-        let apiUrl = `${API_CONFIG.PRODUCTS.BASE}?limit=50`;
-        if (searchQuery) apiUrl += `&search=${encodeURIComponent(searchQuery)}`;
-        if (categoryId) apiUrl += `&category_id=${categoryId}`;
+        // Step 1: URL parameters எடுக்குறோம் (eg: ?category=3)
+        const urlParams = new URLSearchParams(window.location.search);
+        currentFilters.category = urlParams.get('category'); // category_id number as string
+        currentFilters.search = urlParams.get('search');
 
-        // Fetch products
-        const products = await apiGet(apiUrl);
+        // Step 2: Backend-இல் இருந்து categories fetch பண்ணி dropdown populate பண்ணுறோம்
+        await loadCategoryDropdown();
 
-        // Clear grid
-        if (productGrid) productGrid.innerHTML = '';
+        // Step 3: Page title update பண்ணுறோம்
+        updatePageTitle();
 
-        if (!products || products.length === 0) {
-            if (productGrid) {
-                productGrid.innerHTML = `
-                    <div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                        <h3>No products found</h3>
-                        <p>Try adjusting your search or filters.</p>
-                        <a href="products_page.html" class="btn" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #4caf50; color: white; text-decoration: none; border-radius: 5px;">View All Products</a>
-                    </div>
-                `;
-            }
+        // Step 4: Products load பண்ணுறோம்
+        await loadProducts();
+
+        // Step 5: Filter/Search event listeners setup பண்ணுறோம்
+        setupFilters();
+
+    } catch (error) {
+        console.error('Error initializing products page:', error);
+        showModal('Failed to load products', 'error');
+    }
+}
+
+// ===========================================
+// CATEGORY DROPDOWN LOADER
+// ===========================================
+
+/**
+ * loadCategoryDropdown:
+ *   - Backend-இல் இருந்து real categories fetch பண்ணும்
+ *   - Dropdown-ல add பண்ணும்
+ *   - URL-ல category_id இருந்தா auto-select பண்ணும்
+ *   - "Best Sellers" option add பண்ணும் (special redirect)
+ */
+async function loadCategoryDropdown() {
+    const categorySelect = document.getElementById('category-filter');
+    if (!categorySelect) return;
+
+    // Dropdown clear பண்ணி loading text காட்டுறோம்
+    categorySelect.innerHTML = '<option value="">All Categories</option>';
+
+    try {
+        // Backend API-இல் இருந்து categories get பண்ணுறோம்
+        // getCategories() → api.js-ல define ஆயிருக்கும்
+        const categories = await getCategories();
+
+        // Each category-க்கு ஒரு <option> add பண்ணுறோம்
+        categories.forEach(function (cat) {
+            const option = document.createElement('option');
+
+            // Value = category_id (number) — backend இதனால filter பண்ணும்
+            option.value = cat.category_id;
+
+            // Text = category name, emoji icon சேர்த்து
+            const icon = getCategoryIcon(cat.name);
+            option.textContent = icon + ' ' + cat.name;
+
+            categorySelect.appendChild(option);
+        });
+
+        // Special option: "Best Sellers" — click பண்ணும்போது best_selling_page-க்கு போகும்
+        const bestOption = document.createElement('option');
+        bestOption.value = 'best-sellers'; // special value
+        bestOption.textContent = '⭐ Best Sellers';
+        categorySelect.appendChild(bestOption);
+
+        // URL-ல category_id இருந்தா automatically select பண்ணுறோம்
+        if (currentFilters.category) {
+            categorySelect.value = currentFilters.category;
+        }
+
+        console.log('✅ Category dropdown loaded from backend:', categories.length, 'categories');
+
+    } catch (error) {
+        console.error('Failed to load categories:', error);
+        // Error ஆனாலும் dropdown empty-ஆ இருக்கும் — "All Categories" மட்டும் இருக்கும்
+    }
+}
+
+/**
+ * getCategoryIcon:
+ *   - Category name பாத்து suitable emoji return பண்ணும் (simple name matching)
+ */
+function getCategoryIcon(name) {
+    const lowerName = name.toLowerCase();
+    if (lowerName.includes('vegetable')) return '🥕';
+    if (lowerName.includes('flower')) return '🌸';
+    if (lowerName.includes('fruit')) return '🍎';
+    if (lowerName.includes('herb')) return '🌿';
+    if (lowerName.includes('grain')) return '🌾';
+    if (lowerName.includes('seed')) return '🌱';
+    return '📦'; // default icon
+}
+
+// ===========================================
+// PRODUCTS LOADING
+// ===========================================
+
+/**
+ * loadProducts - Products load பண்ணி display பண்ணும்
+ */
+async function loadProducts() {
+    try {
+        const productsContainer = document.querySelector('.product-grid');
+
+        if (!productsContainer) {
+            console.warn('Products container not found');
             return;
         }
 
-        // Render Products
-        if (productGrid) {
-            renderProductGrid(productGrid, products);
-        }
-
-        // Hide the second product grid section if it exists (since we are showing all here)
-        const secondGrid = document.querySelectorAll('.product-grid')[1];
-        if (secondGrid) {
-            // Find the closest section or container to hide
-            const parentSection = secondGrid.closest('section');
-            const popularTitle = document.querySelector('.popular-title');
-
-            if (popularTitle) popularTitle.style.display = 'none';
-            if (secondGrid) secondGrid.style.display = 'none';
-        }
-
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        if (productGrid) productGrid.innerHTML = '<p class="error">Failed to load products. Please try again later.</p>';
-    }
-
-    // Search Functionality
-    const searchToggle = document.getElementById('searchToggle');
-    const searchContainer = document.getElementById('searchContainer');
-    const searchForm = document.getElementById('searchForm');
-    const searchInput = document.getElementById('searchInput');
-
-    if (searchToggle && searchContainer) {
-        searchToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isVisible = searchContainer.style.display === 'block';
-            searchContainer.style.display = isVisible ? 'none' : 'block';
-            if (!isVisible) searchInput.focus();
-        });
-
-        // Close on outside click
-        document.addEventListener('click', (e) => {
-            if (!searchContainer.contains(e.target) && e.target !== searchToggle) {
-                searchContainer.style.display = 'none';
-            }
-        });
-    }
-
-    if (searchForm) {
-        searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const searchTerm = searchInput.value.trim();
-            if (searchTerm) {
-                window.location.href = `products_page.html?search=${encodeURIComponent(searchTerm)}`;
-            }
-        });
-    }
-});
-
-/**
- * Render a list of products into a grid container
- * (Duplicate of index.js function - ideally should be in a shared utility file,
- * but keeping separate for simplicity as per instructions)
- */
-function renderProductGrid(container, products) {
-    products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-
-        // Default image
-        const imageUrl = product.image_url || '../assets/images/logoooo.png';
-
-        // Fake rating
-        const rating = (Math.random() * 1.5 + 3.5).toFixed(1);
-        const reviews = Math.floor(Math.random() * 100) + 1;
-
-        card.innerHTML = `
-            <a href="product.html?id=${product.id}">
-                <div class="card-image" style="background-image: url('${imageUrl}'); background-size: cover; background-position: center;">
-                    ${product.stock_quantity <= 0 ? '<span class="sale-tag" style="background-color: #f44336;">Out of Stock</span>' : ''}
-                </div>
-            </a>
-            <div class="card-details">
-                <h4><a href="product.html?id=${product.id}" style="text-decoration: none; color: inherit;">${product.name}</a></h4>
-                <div class="rating">
-                    ${getStarRating(rating)} (${reviews})
-                </div>
-                <div class="price-action">
-                    <span class="price">${formatPrice(product.price)}</span>
-                    <button class="add-to-cart" data-id="${product.id}" ${product.stock_quantity <= 0 ? 'disabled' : ''}>
-                        ${product.stock_quantity <= 0 ? 'No Stock' : 'Add to Cart'}
-                    </button>
-                </div>
+        // Loading indicator
+        productsContainer.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #10b981;"></i>
+                <p style="margin-top: 20px; color: #666;">Loading products...</p>
             </div>
         `;
 
-        container.appendChild(card);
-    });
+        // Backend API call
+        allProducts = await getAllProducts(currentFilters);
 
-    // Add event listeners
-    const addButtons = container.querySelectorAll('.add-to-cart');
-    addButtons.forEach(btn => {
-        btn.addEventListener('click', handleAddToCart);
-    });
-}
+        // Products display பண்ணுறோம்
+        displayProducts(allProducts);
 
-/**
- * Handle Add to Cart click
- */
-async function handleAddToCart(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!isAuthenticated()) {
-        window.location.href = 'login.html';
-        return;
-    }
-
-    if (!isBuyer()) {
-        alert('Sellers cannot buy products. Please login as a buyer.');
-        return;
-    }
-
-    const button = e.target;
-    const productId = button.dataset.id;
-    const originalText = button.textContent;
-
-    if (button.disabled) return;
-
-    button.disabled = true;
-    button.textContent = 'Adding...';
-
-    try {
-        await apiPost(API_CONFIG.CART.BASE, {
-            product_id: parseInt(productId),
-            quantity: 1
-        });
-
-        button.textContent = 'Added! ✓';
-        button.style.backgroundColor = '#4caf50';
-
-        setTimeout(() => {
-            button.disabled = false;
-            button.textContent = originalText;
-            button.style.backgroundColor = '';
-        }, 2000);
+        console.log(`✅ Loaded ${allProducts.length} products`);
 
     } catch (error) {
-        console.error('Error adding to cart:', error);
-        alert(error.message || 'Failed to add to cart');
-        button.disabled = false;
-        button.textContent = originalText;
-    }
-}
-
-/**
- * Generate star rating HTML
- */
-function getStarRating(rating) {
-    let stars = '';
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 >= 0.5;
-
-    for (let i = 0; i < 5; i++) {
-        if (i < fullStars) {
-            stars += '<i class="fas fa-star"></i>';
-        } else if (i === fullStars && hasHalfStar) {
-            stars += '<i class="fas fa-star-half-alt"></i>';
-        } else {
-            stars += '<i class="far fa-star"></i>';
+        console.error('Failed to load products:', error);
+        const productsContainer = document.querySelector('.product-grid');
+        if (productsContainer) {
+            productsContainer.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                    <p style="color: #f44336;">Failed to load products. Please try again.</p>
+                    <button onclick="loadProducts()" style="
+                        margin-top: 16px;
+                        padding: 10px 24px;
+                        background: #10b981;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                    ">Retry</button>
+                </div>
+            `;
         }
     }
-    return stars;
 }
 
 /**
- * Show loading indicator
+ * displayProducts - Products-ஐ screen-ல காட்டும்
+ * @param {Array} products - Products array
  */
-function showLoading(container) {
-    container.innerHTML = `
-        <div style="width: 100%; text-align: center; padding: 40px; grid-column: 1/-1;">
-            <i class="fas fa-spinner fa-spin" style="font-size: 2em; color: #4caf50;"></i>
-            <p style="margin-top: 10px; color: #666;">Loading catalog...</p>
-        </div>
-    `;
+function displayProducts(products) {
+    const productsContainer = document.querySelector('.product-grid');
+
+    if (!productsContainer) return;
+
+    // No products found
+    if (!products || products.length === 0) {
+        productsContainer.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px;">
+                <div style="font-size: 64px; margin-bottom: 16px;">📦</div>
+                <h3 style="color: #666; margin: 0 0 8px 0;">No Products Found</h3>
+                <p style="color: #999; margin: 0;">Try adjusting your filters or search terms</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Clear container
+    productsContainer.innerHTML = '';
+
+    // Product cards create பண்ணுறோம்
+    products.forEach(product => {
+        const card = createProductCard(product);
+        productsContainer.appendChild(card);
+    });
 }
+
+/**
+ * createProductCard - Product card create பண்ணும் (index.js-ல same logic)
+ * @param {object} product - Product data
+ * @returns {HTMLElement} - Product card
+ */
+function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    card.style.cssText = `
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 16px;
+        background: white;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    `;
+
+    const productUrl = `./product.html?id=${product.id}`;
+
+    let imageUrl = product.image_url;
+    if (product.image_urls && product.image_urls.length > 0) {
+        imageUrl = product.image_urls[0];
+    }
+
+    card.innerHTML = `
+        <a href="${productUrl}" style="text-decoration: none; color: inherit;">
+            <img src="${imageUrl || '../assets/images/placeholder.png'}" 
+                 alt="${product.name}" 
+                 style="width: 100%; height: 200px; object-fit: cover; border-radius: 6px; margin-bottom: 12px;"
+                 onerror="this.src='../assets/images/placeholder.png'">
+            <h3 style="margin: 0 0 8px 0; font-size: 16px; color: #333;">
+                ${truncateText(product.name, 50)}
+            </h3>
+            <p style="margin: 0 0 12px 0; color: #666; font-size: 14px; min-height: 40px;">
+                ${truncateText(product.description, 80)}
+            </p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 20px; font-weight: bold; color: #10b981;">
+                    ${formatPrice(product.price)}
+                </span>
+                <button onclick="handleAddToCart(${product.id}, event)" style="
+                    padding: 8px 16px;
+                    background: #10b981;
+                    color: white;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                ">Add to Cart</button>
+            </div>
+        </a>
+    `;
+
+    // Hover effects
+    card.addEventListener('mouseenter', () => {
+        card.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+        card.style.transform = 'translateY(-4px)';
+    });
+
+    card.addEventListener('mouseleave', () => {
+        card.style.boxShadow = 'none';
+        card.style.transform = 'translateY(0)';
+    });
+
+    return card;
+}
+
+/**
+ * handleAddToCart - Add to cart (same as index.js)
+ */
+async function handleAddToCart(productId, event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    try {
+        if (!isLoggedIn()) {
+            showModal('Please login to add items to cart', 'warning');
+            setTimeout(() => {
+                window.location.href = './login.html';
+            }, 1500);
+            return;
+        }
+
+        await addToCart(productId, 1);
+
+    } catch (error) {
+        console.error('Failed to add to cart:', error);
+    }
+}
+
+// ===========================================
+// FILTERS AND SEARCH
+// ===========================================
+
+/**
+ * setupFilters - Filter controls setup பண்ணும்
+ */
+function setupFilters() {
+    // Search box
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(handleSearchChange, 500));
+
+        // Pre-fill search value
+        if (currentFilters.search) {
+            searchInput.value = currentFilters.search;
+        }
+    }
+
+    // Category filter
+    const categoryFilter = document.getElementById('category-filter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', handleCategoryChange);
+
+        // Pre-select category
+        if (currentFilters.category) {
+            categoryFilter.value = currentFilters.category;
+        }
+    }
+
+    // Price range filter
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+
+    if (minPriceInput) {
+        minPriceInput.addEventListener('change', handlePriceChange);
+    }
+
+    if (maxPriceInput) {
+        maxPriceInput.addEventListener('change', handlePriceChange);
+    }
+
+    console.log('✅ Filters initialized');
+}
+
+/**
+ * handleSearchChange - Search input change handle பண்ணும்
+ */
+function handleSearchChange(e) {
+    currentFilters.search = e.target.value.trim() || null;
+    loadProducts();
+}
+
+/**
+ * handleCategoryChange:
+ *   - User category select பண்ணும்போது call ஆகும்
+ *   - "Best Sellers" select பண்ணா best_selling_page-க்கு redirect பண்ணும்
+ *   - மத்த categories-க்கு products filter பண்ணும்
+ */
+function handleCategoryChange(e) {
+    const selectedValue = e.target.value;
+
+    // Special case: "Best Sellers" select பண்ணா redirect பண்ணுறோம்
+    if (selectedValue === 'best-sellers') {
+        window.location.href = './best_selling_page.html';
+        return;
+    }
+
+    // மத்த categories: filter update பண்ணி products reload பண்ணுறோம்
+    currentFilters.category = selectedValue || null;
+    loadProducts();
+
+    // Page title update பண்ணுறோம்
+    updatePageTitle();
+}
+
+/**
+ * handlePriceChange - Price range change handle பண்ணும்
+ */
+function handlePriceChange() {
+    const minPrice = document.getElementById('min-price')?.value;
+    const maxPrice = document.getElementById('max-price')?.value;
+
+    currentFilters.minPrice = minPrice ? parseFloat(minPrice) : null;
+    currentFilters.maxPrice = maxPrice ? parseFloat(maxPrice) : null;
+
+    loadProducts();
+}
+
+/**
+ * clearFilters - எல்லா filters-ம் clear பண்ணும்
+ */
+function clearFilters() {
+    currentFilters = {
+        category: null,
+        search: null,
+        minPrice: null,
+        maxPrice: null
+    };
+
+    // Input fields clear பண்ணுறோம்
+    const searchInput = document.getElementById('search-input');
+    const categoryFilter = document.getElementById('category-filter');
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+
+    if (searchInput) searchInput.value = '';
+    if (categoryFilter) categoryFilter.value = '';
+    if (minPriceInput) minPriceInput.value = '';
+    if (maxPriceInput) maxPriceInput.value = '';
+
+    // Products reload பண்ணுறோம்
+    loadProducts();
+}
+
+// ===========================================
+// HELPER FUNCTIONS
+// ===========================================
+
+function updatePageTitle() {
+    const pageTitle = document.querySelector('h1');
+    if (!pageTitle) return;
+
+    if (currentFilters.category) {
+        // Category filter-ல currently selected option-ஓட text எடுக்குறோம்
+        // Extra API call தேவையில்லை — dropdown-லயே text இருக்கு!
+        const categorySelect = document.getElementById('category-filter');
+        if (categorySelect && categorySelect.selectedOptions[0]) {
+            const selectedText = categorySelect.selectedOptions[0].textContent;
+            pageTitle.textContent = '| ' + selectedText;
+        } else {
+            pageTitle.textContent = '| Products';
+        }
+    } else if (currentFilters.search) {
+        pageTitle.textContent = '🔍 Search: "' + currentFilters.search + '"';
+    } else {
+        pageTitle.textContent = '| All Products';
+    }
+}
+
+// ===========================================
+// AUTO-INITIALIZATION
+// ===========================================
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProductsPage);
+} else {
+    initProductsPage();
+}
+
+console.log('✅ Products.js loaded successfully!');

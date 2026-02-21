@@ -1,164 +1,331 @@
-/**
- * Cart Page JavaScript
- * Handles shopping cart functionality: listing items, updating quantities, removing items
- */
+// ===================================================
+// CART.JS - Shopping Cart Page JavaScript
+// ===================================================
+// Cart items display, update quantity, remove items, checkout
 
-document.addEventListener('DOMContentLoaded', async function () {
-    // Check authentication
-    if (!requireAuth()) return;
-    if (!requireBuyer()) return;
+// ===========================================
+// GLOBAL VARIABLES
+// ===========================================
 
-    // UI Elements
-    const cartWrapper = document.querySelector('.cart-items-wrapper');
-    const badge = document.querySelector('.badge');
+let cartData = null;
 
-    if (cartWrapper) showLoading(cartWrapper);
+// ===========================================
+// PAGE INITIALIZATION
+// ===========================================
 
-    try {
-        await loadCart();
-    } catch (error) {
-        console.error('Error loading cart:', error);
-        cartWrapper.innerHTML = '<p class="error">Failed to load cart. Please try again later.</p>';
-    }
-});
+async function initCartPage() {
+    console.log('🛒 Initializing cart page...');
 
-/**
- * Load and display cart items
- */
-async function loadCart() {
-    const cartWrapper = document.querySelector('.cart-items-wrapper');
-    const badge = document.querySelector('.badge');
-
-    // Fetch cart data
-    const response = await apiGet(API_CONFIG.CART.BASE);
-    const apiItems = response.items || [];
-    const totalAmount = response.total_amount || 0;
-
-    // Update Badge
-    if (badge) badge.textContent = response.total_items || 0;
-
-    // Clear wrapper
-    cartWrapper.innerHTML = '';
-
-    if (apiItems.length === 0) {
-        cartWrapper.innerHTML = `
-            <div class="empty-cart" style="text-align: center; padding: 40px;">
-                <i class="fas fa-shopping-cart" style="font-size: 3em; color: #ddd; margin-bottom: 20px;"></i>
-                <h2>Your cart is empty</h2>
-                <p>Looks like you haven't added any products yet.</p>
-                <a href="products_page.html" class="buy-now-btn" style="display: inline-block; margin-top: 20px; text-decoration: none;">Start Shopping</a>
-            </div>
-        `;
+    // Login check (Cart page-க்கு login required)
+    if (!requireAuth()) {
         return;
     }
 
-    // Render Items
-    apiItems.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'cart-item';
-        itemDiv.dataset.id = item.cart_id;
+    try {
+        // Cart data load பண்ணுறோம்
+        await loadCart();
 
-        // Default image
-        const imageUrl = item.product_image || '../assets/images/logoooo.png';
+    } catch (error) {
+        console.error('Error initializing cart page:', error);
+        showModal('Failed to load cart', 'error');
+    }
+}
 
-        itemDiv.innerHTML = `
-            <div class="item-image-area">
-                <img src="${imageUrl}" alt="${item.product_name}">
-            </div>
-            <div class="item-details">
-                <h2 class="item-name"><a href="product.html?id=${item.product_id}" style="text-decoration: none; color: inherit;">${item.product_name}</a></h2>
-                <p>Price: ${formatPrice(item.product_price)}</p>
-                <div class="quantity-controls" style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
-                    <label>Quantity:</label>
-                    <input type="number" class="qty-input" value="${item.quantity}" min="1" max="${item.product_stock}" style="width: 50px; padding: 5px;">
-                </div>
-                <p class="item-subtotal" style="font-weight: bold; margin-top: 10px;">Subtotal: ${formatPrice(item.subtotal)}</p>
-            </div>
-            <div class="item-actions">
-                <button class="remove-btn" onclick="removeItem(${item.cart_id})">Remove</button>
+// ===========================================
+// CART LOADING
+// ===========================================
+
+/**
+ * loadCart - Cart data load பண்ணி display பண்ணும்
+ */
+async function loadCart() {
+    try {
+        const cartContainer = document.getElementById('cart-items');
+
+        if (!cartContainer) {
+            console.warn('Cart container not found');
+            return;
+        }
+
+        // Loading indicator
+        cartContainer.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #10b981;"></i>
+                <p>Loading cart...</p>
             </div>
         `;
 
-        // Add event listener for quantity change
-        const qtyInput = itemDiv.querySelector('.qty-input');
-        qtyInput.addEventListener('change', (e) => updateQuantity(item.cart_id, e.target.value));
+        // Cart API call
+        cartData = await getCart();
 
-        cartWrapper.appendChild(itemDiv);
+        // Cart display பண்ணுறோம்
+        displayCart(cartData);
+
+        console.log('✅ Cart loaded:', cartData);
+
+    } catch (error) {
+        console.error('Failed to load cart:', error);
+        const cartContainer = document.getElementById('cart-items');
+        if (cartContainer) {
+            cartContainer.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <p style="color: #f44336;">Failed to load cart</p>
+                    <button onclick="loadCart()" style="
+                        margin-top: 12px;
+                        padding: 10px 24px;
+                        background: #10b981;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                    ">Retry</button>
+                </div>
+            `;
+        }
+    }
+}
+
+/**
+ * displayCart - Cart items display பண்ணும்
+ * @param {object} cart - Cart data
+ */
+function displayCart(cart) {
+    const cartContainer = document.getElementById('cart-items');
+    const cartSummary = document.getElementById('cart-summary');
+
+    if (!cartContainer) return;
+
+    // Empty cart check
+    if (!cart || !cart.items || cart.items.length === 0) {
+        cartContainer.innerHTML = `
+            <div style="text-align: center; padding: 60px;">
+                <div style="font-size: 64px; margin-bottom: 16px;">🛒</div>
+                <h3 style="color: #666; margin: 0 0 12px 0;">Your cart is empty</h3>
+                <p style="color: #999; margin: 0 0 24px 0;">Add some products to get started!</p>
+                <a href="../index.html" style="
+                    display: inline-block;
+                    padding: 12px 32px;
+                    background: #10b981;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 6px;
+                ">Continue Shopping</a>
+            </div>
+        `;
+
+        // Summary hide பண்ணுறோம்
+        if (cartSummary) {
+            cartSummary.style.display = 'none';
+        }
+
+        return;
+    }
+
+    // Cart items display பண்ணுறோம்
+    cartContainer.innerHTML = '';
+
+    cart.items.forEach(item => {
+        const cartItem = createCartItemCard(item);
+        cartContainer.appendChild(cartItem);
     });
 
-    // Render Total and Checkout Button
-    const checkoutDiv = document.createElement('div');
-    checkoutDiv.className = 'cart-summary';
-    checkoutDiv.style.marginTop = '30px';
-    checkoutDiv.style.padding = '20px';
-    checkoutDiv.style.borderTop = '2px solid #eee';
-    checkoutDiv.style.textAlign = 'right';
+    // Cart summary update பண்ணுறோம்
+    updateCartSummary(cart);
+}
 
-    checkoutDiv.innerHTML = `
-        <div class="cart-total" style="font-size: 1.5em; font-weight: bold; margin-bottom: 20px;">
-            Total: <span id="cart-total-amount">${formatPrice(totalAmount)}</span>
+/**
+ * createCartItemCard - Cart item card create பண்ணும்
+ * @param {object} item - Cart item
+ * @returns {HTMLElement} - Cart item card
+ */
+function createCartItemCard(item) {
+    const card = document.createElement('div');
+    card.className = 'cart-item';
+
+    // Product image
+    const imageUrl = item.product_image || '../assets/images/placeholder.png';
+
+    card.innerHTML = `
+        <div class="item-image-area">
+            <img src="${imageUrl}" alt="${item.product_name}" onerror="this.src='../assets/images/placeholder.png'">
         </div>
-        <button class="buy-now-btn" id="checkout-btn">Proceed to Checkout</button>
+        
+        <div class="item-details">
+            <h3 class="item-name">${item.product_name}</h3>
+            <p class="item-price">Price: ${formatPrice(item.product_price)}</p>
+            
+            <div style="display: flex; align-items: center; gap: 20px; margin-top: 15px;">
+                <div class="quantity-controls" style="display: flex; align-items: center; gap: 10px; background: #f5f5f5; padding: 5px 15px; border-radius: 25px;">
+                    <button onclick="updateItemQuantity(${item.cart_id}, ${item.quantity - 1})" style="border: none; background: none; cursor: pointer; font-size: 18px; font-weight: bold; color: #666;">-</button>
+                    <span style="font-weight: 600; min-width: 20px; text-align: center;">${item.quantity}</span>
+                    <button onclick="updateItemQuantity(${item.cart_id}, ${item.quantity + 1})" style="border: none; background: none; cursor: pointer; font-size: 18px; font-weight: bold; color: #666;">+</button>
+                </div>
+                
+                <span class="remove-btn" onclick="removeCartItem(${item.cart_id})">
+                    <i class="fas fa-trash-alt"></i> Remove
+                </span>
+            </div>
+        </div>
+        
+        <div class="item-subtotal" style="text-align: right; min-width: 120px;">
+            <p style="font-size: 0.9em; color: #777; margin-bottom: 5px;">Subtotal</p>
+            <strong style="font-size: 1.25em; color: #2e7d32;">
+                ${formatPrice(item.subtotal)}
+            </strong>
+        </div>
     `;
 
-    cartWrapper.appendChild(checkoutDiv);
-
-    // Add event listener for checkout
-    document.getElementById('checkout-btn').addEventListener('click', handleCheckout);
+    return card;
 }
 
 /**
- * Update cart item quantity
+ * updateCartSummary - Cart summary (total, etc.) update பண்ணும்
+ * @param {object} cart - Cart data
  */
-async function updateQuantity(cartId, newQuantity) {
-    if (newQuantity < 1) return;
+function updateCartSummary(cart) {
+    const summaryContainer = document.getElementById('cart-summary');
 
+    if (!summaryContainer) return;
+
+    // Total calculation
+    const subtotal = cart.total_amount || 0;
+    const shipping = 50; // Fixed shipping charge
+    const tax = subtotal * 0.05; // 5% tax
+    const total = subtotal + shipping + tax;
+
+    summaryContainer.innerHTML = `
+        <h3 style="margin: 0 0 16px 0;">Order Summary</h3>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span>Subtotal:</span>
+            <span>${formatPrice(subtotal)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <span>Shipping:</span>
+            <span>${formatPrice(shipping)}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+            <span>Tax (5%):</span>
+            <span>${formatPrice(tax)}</span>
+        </div>
+        <hr style="border: none; border-top: 1px solid #e0e0e0; margin: 16px 0;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
+            <strong style="font-size: 18px;">Total:</strong>
+            <strong style="font-size: 18px; color: #10b981;">${formatPrice(total)}</strong>
+        </div>
+        <button onclick="proceedToCheckout()" style="
+            width: 100%;
+            padding: 14px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        ">Proceed to Checkout</button>
+        <button onclick="continueShopping()" style="
+            width: 100%;
+            margin-top: 12px;
+            padding: 12px;
+            background: white;
+            color: #10b981;
+            border: 1px solid #10b981;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        ">Continue Shopping</button>
+    `;
+
+    summaryContainer.style.display = 'block';
+}
+
+// ===========================================
+// CART ACTIONS
+// ===========================================
+
+/**
+ * updateItemQuantity - Cart item quantity update பண்ணும்
+ * @param {number} cartItemId - Cart item ID
+ * @param {number} newQuantity - New quantity
+ */
+async function updateItemQuantity(cartItemId, newQuantity) {
     try {
-        await apiPut(`${API_CONFIG.CART.BASE}/${cartId}`, {
-            quantity: parseInt(newQuantity)
-        });
+        // Minimum quantity check
+        if (newQuantity < 1) {
+            showConfirmModal(
+                'Do you want to remove this item from cart?',
+                () => removeCartItem(cartItemId),
+                null
+            );
+            return;
+        }
 
-        // Reload cart to update totals
+        showLoading('Updating cart...');
+
+        // API call
+        await updateCartItem(cartItemId, newQuantity);
+
+        // Cart reload பண்ணுறோம்
         await loadCart();
-        showSuccess('Cart updated');
+
+        hideLoading();
+        showModal('Cart updated!', 'success', 2000);
 
     } catch (error) {
-        console.error('Error updating cart:', error);
-        alert(error.message || 'Failed to update quantity');
-        await loadCart(); // Revert changes
+        hideLoading();
+        console.error('Failed to update quantity:', error);
     }
 }
 
 /**
- * Remove item from cart
+ * removeCartItem - Cart-ல இருந்து item remove பண்ணும்
+ * @param {number} cartItemId - Cart item ID
  */
-async function removeItem(cartId) {
-    if (!confirm('Are you sure you want to remove this item?')) return;
-
+async function removeCartItem(cartItemId) {
     try {
-        await apiDelete(`${API_CONFIG.CART.BASE}/${cartId}`);
+        showLoading('Removing item...');
+
+        // API call
+        await removeFromCart(cartItemId);
+
+        // Cart reload பண்ணுறோம்
         await loadCart();
-        showSuccess('Item removed');
+
+        hideLoading();
 
     } catch (error) {
-        console.error('Error removing item:', error);
-        alert(error.message || 'Failed to remove item');
+        hideLoading();
+        console.error('Failed to remove item:', error);
     }
 }
 
 /**
- * Handle Checkout
+ * proceedToCheckout - Checkout page-க்கு redirect
  */
-async function handleCheckout() {
-    const btn = document.getElementById('checkout-btn');
-    if (!btn) return;
+function proceedToCheckout() {
+    if (!cartData || !cartData.items || cartData.items.length === 0) {
+        showModal('Your cart is empty', 'warning');
+        return;
+    }
 
-    btn.disabled = true;
-    btn.textContent = 'Processing...';
-
-    // Instead of placing order here, we redirect to address page
-    window.location.href = 'address.html';
+    window.location.href = './address.html';
 }
 
-// Make removeItem global so onclick works
-window.removeItem = removeItem;
+/**
+ * continueShopping - Products page-க்கு redirect
+ */
+function continueShopping() {
+    window.location.href = './products_page.html';
+}
+
+// ===========================================
+// AUTO-INITIALIZATION
+// ===========================================
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCartPage);
+} else {
+    initCartPage();
+}
+
+console.log('✅ Cart.js loaded successfully!');

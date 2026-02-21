@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback - UZHAVAN PLANET</title>
+    <link rel="stylesheet" href="../css/common_ui.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -20,58 +22,6 @@
             line-height: 1.6;
         }
 
-        /* 🧭 HEADER */
-        .header-nav {
-            background-color: #f1f8e9;
-            /* Mint */
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(46, 125, 50, 0.15);
-            border-top: 5px solid #1b5e20;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            gap: 15px;
-        }
-
-        .logo-circle {
-            width: 45px;
-            height: 45px;
-            background-color: transparent;
-            border-radius: 50%;
-            border: 2px solid #ffca28;
-            object-fit: cover;
-        }
-
-        .logo-section h1 {
-            color: #1b5e20;
-            font-size: 1.6em;
-            font-weight: 800;
-            margin: 0;
-        }
-
-        .nav-links a {
-            color: #33691e;
-            text-decoration: none;
-            padding: 8px 16px;
-            margin-left: 15px;
-            font-weight: 600;
-            transition: all 0.3s;
-            border-radius: 20px;
-        }
-
-        .nav-links a:hover {
-            background-color: #1b5e20;
-            color: white;
-        }
 
         /* Feedback Content */
         .main-content {
@@ -257,18 +207,32 @@
 </head>
 
 <body>
-    <header class="header-nav">
-        <a href="../index.html" class="logo-section">
-            <img class="logo-circle" src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
-            <h1>UZHAVAN PLANET</h1>
-        </a>
-        <div class="nav-links">
-            <a href="../index.html">Home</a>
-            <a href="products_page.html">Shop All</a>
-            <a href="best_selling_page.html">Bestsellers</a>
-            <a href="report.html">Support</a>
-            <a href="user_details.html">Profile</a>
+    <!-- Standard Header -->
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html">🛒 cart</a>
+            </div>
         </div>
+
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="./products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html" class="active">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html">Profile</a>
+        </nav>
     </header>
 
     <div class="main-content">
@@ -280,42 +244,43 @@
                 <h2>Share Feedback</h2>
             </div>
 
-            <form>
+            <form id="feedback-form">
                 <div class="input-group-row">
                     <div>
                         <span class="input-label">Name</span>
-                        <input type="text" placeholder="Your Name">
+                        <input type="text" id="feedback-name" placeholder="Your Name" required>
                     </div>
                 </div>
 
                 <div class="input-group-row">
                     <div>
                         <span class="input-label">Email Address</span>
-                        <input type="email" placeholder="example@gmail.com">
+                        <input type="email" id="feedback-email" placeholder="example@gmail.com" required>
                     </div>
                 </div>
 
                 <div class="rating-section">
                     <p>How was your experience?</p>
+                    <input type="hidden" id="feedback-rating" value="5">
 
                     <div class="emojis">
-                        <div class="emoji-option">
+                        <div class="emoji-option" onclick="selectEmojiRating(1)">
                             😟
                             <div class="emoji-label">Terrible</div>
                         </div>
-                        <div class="emoji-option">
+                        <div class="emoji-option" onclick="selectEmojiRating(2)">
                             🙁
                             <div class="emoji-label">Bad</div>
                         </div>
-                        <div class="emoji-option">
+                        <div class="emoji-option" onclick="selectEmojiRating(3)">
                             😐
                             <div class="emoji-label">Okay</div>
                         </div>
-                        <div class="emoji-option">
+                        <div class="emoji-option" onclick="selectEmojiRating(4)">
                             🙂
                             <div class="emoji-label">Good</div>
                         </div>
-                        <div class="emoji-option" style="opacity: 1;">
+                        <div class="emoji-option" onclick="selectEmojiRating(5)" style="opacity: 1;">
                             😃
                             <div class="emoji-label">Great</div>
                         </div>
@@ -323,16 +288,65 @@
                 </div>
 
                 <span class="input-label">Detailed Comments</span>
-                <textarea class="comment-box" rows="5" placeholder="Tell us more about your experience..."></textarea>
+                <textarea id="feedback-message" class="comment-box" rows="5"
+                    placeholder="Tell us more about your experience..." required></textarea>
 
                 <button type="submit" class="submit-button" style="border: none; width: 100%;">Submit Feedback</button>
             </form>
         </div>
     </div>
 
+    <!-- Standard Footer -->
+    <section class="extended-footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Uzhavan Planet</h3>
+                <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
+                    nourishing communities.</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Site Menu</h3>
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="./products_page.html">Shop All</a></li>
+                    <li><a href="./About_page.html">About Us</a></li>
+                    <li><a href="./best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./feedback.html">Feedback</a></li>
+                    <li><a href="./report.html">Support</a></li>
+                    <li><a href="./user_details.html">Profile</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Connect With Us</h3>
+                <p>Follow us on social media for updates and offers!</p>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 Uzhavan Planet | Designed with 💚 for Farmers</p>
+    </footer>
+
     <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/feedback.js"></script>
 </body>
 

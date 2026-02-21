@@ -1,3 +1,15 @@
+/* ===== CSS Variables ===== */
+:root {
+    --primary-color: #2ecc71;
+    --primary-dark: #27ae60;
+    --secondary-color: #3498db;
+    --dark-bg: #1a1a2e;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --border-color: #ecf0f1;
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
 /* Base & Typography */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
@@ -9,124 +21,160 @@ body {
     background-image: radial-gradient(#e8f5e9 1px, transparent 1px);
     background-size: 20px 20px;
     color: #3e2723;
-}
-
-/* 🧭 Navigation Bar */
-.navbar {
-    background-color: #f1f8e9;
-    /* Mint Header */
-    padding: 15px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.15);
-    border-top: 5px solid #1b5e20;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo-section {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    gap: 12px;
-}
-
-.logo-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid #ffca28;
-    object-fit: cover;
-}
-
-.logo-section h1 {
-    color: #1b5e20;
-    font-size: 1.6em;
-    font-weight: 800;
-    margin: 0;
-}
-
-.nav-links a {
-    color: #33691e;
-    text-decoration: none;
-    padding: 8px 16px;
-    margin-left: 15px;
-    font-weight: 600;
-    transition: all 0.3s;
-    border-radius: 20px;
-}
-
-.nav-links a:hover {
-    background-color: #1b5e20;
-    color: white;
+    line-height: 1.6;
 }
 
 /* 🏠 Main Content */
 .main-content {
-    padding: 50px;
-    max-width: 900px;
-    margin: 50px auto;
+    padding: 40px;
+    max-width: 800px;
+    margin: 40px auto;
     background-color: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(46, 125, 50, 0.1);
-    border: 1px solid #e0e0e0;
+    border-radius: 25px;
+    box-shadow: 0 20px 50px rgba(46, 125, 50, 0.1);
+    border: 1px solid #e8f5e9;
 }
 
-/* Form Styles */
-input[type="text"],
-select {
-    width: 100%;
-    padding: 15px;
-    margin-bottom: 25px;
-    border: 1px solid #c5e1a5;
-    border-radius: 12px;
-    box-sizing: border-box;
-    font-size: 1em;
-    background-color: #fcfdfc;
+h2 {
     color: #1b5e20;
-}
-
-input[type="text"]:focus,
-select:focus {
-    outline: none;
-    border-color: #2e7d32;
-    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
-}
-
-.input-group-row {
-    display: flex;
-    gap: 25px;
-}
-
-.input-group-row input,
-.input-group-row select {
-    flex: 1;
-}
-
-.continue-button {
-    background: linear-gradient(135deg, #66bb6a, #43a047);
-    color: white;
-    padding: 16px 30px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 1.1em;
-    font-weight: 700;
-    margin-top: 30px;
-    display: block;
-    width: 60%;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 30px;
     text-align: center;
-    text-decoration: none;
-    transition: all 0.3s;
-    box-shadow: 0 5px 15px rgba(67, 160, 71, 0.3);
+    letter-spacing: -0.5px;
 }
 
-.continue-button:hover {
-    background: linear-gradient(135deg, #43a047, #2e7d32);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(67, 160, 71, 0.4);
+/* Order Item Details */
+.order-summary {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+    padding: 25px;
+    background: #fcfdfc;
+    border-radius: 20px;
+    border: 1px solid #f1f8e9;
+}
+
+.item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-right: 25px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+}
+
+.item-info h3 {
+    margin: 0 0 8px 0;
+    color: #1b5e20;
+    font-size: 1.3rem;
+}
+
+.item-info p {
+    margin: 4px 0;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.price {
+    font-weight: 800;
+    color: #2e7d32;
+    font-size: 1.5rem;
+    margin-top: 10px;
+}
+
+/* Tracking Timeline Structure */
+.tracking-timeline {
+    position: relative;
+    padding-left: 50px;
+    margin-top: 40px;
+}
+
+/* Vertical Line */
+.tracking-timeline::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 14px;
+    width: 4px;
+    background-color: #f0f0f0;
+    border-radius: 2px;
+}
+
+.step {
+    position: relative;
+    margin-bottom: 40px;
+    padding-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.step:last-child {
+    margin-bottom: 0;
+}
+
+.circle {
+    position: absolute;
+    left: -44px;
+    top: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #eee;
+    border: 4px solid white;
+    z-index: 1;
+    box-shadow: 0 0 0 1px #eee;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.step p {
+    margin: 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #aaa;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+/* Active/Done Step Styles */
+.step-active .circle {
+    background-color: #4CAF50;
+    box-shadow: 0 0 0 1px #4CAF50;
+}
+
+.step-active p {
+    color: #4CAF50;
+}
+
+/* Current Step */
+.step-current .circle {
+    background-color: #ff9800;
+    box-shadow: 0 0 0 5px rgba(255, 152, 0, 0.2);
+    transform: scale(1.2);
+}
+
+.step-current p {
+    color: #ff9800;
+    font-weight: 800;
+}
+
+/* Standard UI Styles (Header/Footer) now loaded from common_ui.css */
+
+
+@media (max-width: 600px) {
+    .main-content {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .order-summary {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .item-image {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
 }

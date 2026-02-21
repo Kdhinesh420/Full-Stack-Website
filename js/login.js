@@ -1,111 +1,108 @@
+// ===================================================
+// LOGIN.JS - Login Page JavaScript
+// ===================================================
+// Login form handling
+
+// ===========================================
+// PAGE INITIALIZATION
+// ===========================================
+
+function initLoginPage() {
+    console.log('🔐 Initializing login page...');
+
+    // Already logged in-ஆ இருந்தா home page-க்கு redirect
+    if (isLoggedIn()) {
+        showModal('You are already logged in!', 'info');
+        redirectTo('../index.html', 1000);
+        return;
+    }
+
+    // Login form setup
+    setupLoginForm();
+}
+
+// ===========================================
+// LOGIN FORM HANDLING
+// ===========================================
+
 /**
- * Login Page JavaScript
- * Handles user login functionality
+ * setupLoginForm - Login form events setup பண்ணும்
  */
+function setupLoginForm() {
+    const loginForm = document.getElementById('login-form');
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Check if already logged in
-    if (isAuthenticated()) {
-        const user = getUser();
-        if (user) {
-            if (user.role === 'seller') {
-                window.location.href = './seller_dashboard.html';
-            } else {
-                window.location.href = '../index.html';
-            }
-            return;
-        }
+    if (!loginForm) {
+        console.warn('Login form not found');
+        return;
     }
 
-    const loginForm = document.querySelector('form');
-    const usernameInput = document.querySelector('input[type="text"]');
-    const passwordInput = document.querySelector('input[type="password"]');
-    const submitButton = document.querySelector('button[type="submit"]');
+    // Form submit event
+    loginForm.addEventListener('submit', handleLoginSubmit);
 
-    // Create error message container if it doesn't exist
-    if (!document.getElementById('error-message')) {
-        const errorDiv = document.createElement('div');
-        errorDiv.id = 'error-message';
-        errorDiv.style.display = 'none';
-        errorDiv.style.color = 'red';
-        errorDiv.style.marginBottom = '15px';
-        errorDiv.style.padding = '10px';
-        errorDiv.style.backgroundColor = '#ffe6e6';
-        errorDiv.style.borderRadius = '5px';
-        loginForm.insertBefore(errorDiv, loginForm.firstChild);
-    }
+    console.log('✅ Login form initialized');
+}
 
-    // Create success message container if it doesn't exist
-    if (!document.getElementById('success-message')) {
-        const successDiv = document.createElement('div');
-        successDiv.id = 'success-message';
-        successDiv.style.display = 'none';
-        successDiv.style.color = 'green';
-        successDiv.style.marginBottom = '15px';
-        successDiv.style.padding = '10px';
-        successDiv.style.backgroundColor = '#e6ffe6';
-        successDiv.style.borderRadius = '5px';
-        loginForm.insertBefore(successDiv, loginForm.firstChild);
-    }
+/**
+ * handleLoginSubmit - Login form submit handle பண்ணும்
+ * @param {Event} e - Submit event
+ */
+async function handleLoginSubmit(e) {
+    e.preventDefault(); // Page reload ஆகாம prevent பண்ணுறோம்
 
-    loginForm.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const username = usernameInput.value.trim();
-        const password = passwordInput.value;
+    try {
+        // Form data எடுக்குறோம்
+        const email = document.getElementById('email')?.value.trim();
+        const password = document.getElementById('password')?.value;
 
         // Validation
-        if (!username || !password) {
-            showError('Please enter both username and password');
+        if (!validateLoginForm(email, password)) {
             return;
         }
 
-        // Show loading state
-        const originalButtonText = submitButton.innerHTML;
-        showLoading(submitButton);
+        // Login API call (auth.js-ல defined)
+        const result = await login(email, password);
 
-        try {
-            // Create form data for OAuth2PasswordRequestForm
-            const formData = new URLSearchParams();
-            formData.append('username', username);
-            formData.append('password', password);
-
-            // Make login request
-            const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.AUTH.LOGIN}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.detail || 'Login failed');
+        if (result.success) {
+            // Login success - Role-க்கு ஏற்ற page-க்கு redirect
+            if (result.userRole === 'seller') {
+                redirectTo('../pages/seller_dashboard.html', 1500);
+            } else {
+                redirectTo('../index.html', 1500);
             }
-
-            const data = await response.json();
-
-            // Save token and user data
-            saveToken(data.access_token);
-            saveUser(data.user);
-
-            // Show success message
-            showSuccess('Login successful! Redirecting...');
-
-            // Redirect based on role
-            setTimeout(() => {
-                if (data.user && data.user.role === 'seller') {
-                    window.location.href = './seller_dashboard.html';
-                } else {
-                    window.location.href = '../index.html';
-                }
-            }, 1000);
-
-        } catch (error) {
-            console.error('Login error:', error);
-            showError(error.message || 'Login failed. Please try again.');
-            hideLoading(submitButton, originalButtonText);
         }
-    });
-});
+
+    } catch (error) {
+        console.error('Login error:', error);
+    }
+}
+
+// ===========================================
+// ADDITIONAL FUNCTIONS
+// ===========================================
+
+/**
+ * goToSignup - Signup page-க்கு redirect பண்ணும்
+ */
+function goToSignup() {
+    window.location.href = './sign up.html';
+}
+
+/**
+ * forgotPassword - Forgot password handle பண்ணும் (Future implementation)
+ */
+function forgotPassword() {
+    showModal('Password reset functionality coming soon!', 'info');
+    // TODO: Implement forgot password flow
+}
+
+// ===========================================
+// AUTO-INITIALIZATION
+// ===========================================
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLoginPage);
+} else {
+    initLoginPage();
+}
+
+console.log('✅ Login.js loaded successfully!');

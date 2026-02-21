@@ -1,193 +1,262 @@
+// ===================================================
+// PRODUCT-ADD.JS - Add Product Page JavaScript
+// ===================================================
+// For sellers to add new products
+
+// ===========================================
+// PAGE INITIALIZATION
+// ===========================================
+
+function initAddProductPage() {
+    console.log('📦 Initializing add product page...');
+
+    // 1. Seller authentication check
+    if (!requireRole('seller')) return;
+
+    // 2. Load categories dynamically from backend
+    loadCategories();
+
+    // 3. Setup form
+    setupAddProductForm();
+}
+
+// ===========================================
+// LOAD CATEGORIES
+// ===========================================
+
 /**
- * Product Add Page JavaScript
- * Handles creation of new products by sellers
+ * loadCategories - Category dropdown load பண்ணும் (Backend API-ல இருந்து)
  */
+async function loadCategories() {
+    const categorySelect = document.getElementById('category');
+    if (!categorySelect) return;
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Check authentication and role
-    if (!requireAuth()) return;
-    if (!requireSeller()) return;
+    // Clear existing options except default and 'new'
+    categorySelect.innerHTML = `
+        <option value="">Select Category</option>
+        <option value="new">+ Create New Category</option>
+    `;
 
-    // UI Elements
-    const form = document.querySelector('form');
-    const submitBtn = form.querySelector('button[type="submit"]');
+    try {
+        // Fetch categories from backend
+        // Note: Make sure api.js has getCategories() function
+        const categories = await getCategories();
 
-    // Add missing form fields if they don't exist
-    // We wrap this in an async function to avoid blocking the main flow but still ensure fields exist
-    const initializeForm = async () => {
-        await addMissingFields(form, submitBtn);
-    };
-    initializeForm();
+        // Add options
+        categories.forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat.category_id; // Use primary key from DB
+            option.textContent = cat.name;
 
-    // Handle form submission
-    form.addEventListener('submit', async function (e) {
-        e.preventDefault();
+            // Insert before the 'Create New' option
+            categorySelect.insertBefore(option, categorySelect.lastElementChild);
+        });
 
-        const name = document.getElementById('product-name').value.trim();
-        const description = document.getElementById('product-description').value.trim();
-        const price = parseFloat(document.getElementById('product-price').value);
+    } catch (error) {
+        console.error("Error loading categories:", error);
+        // Fallback or show error
+    }
+}
 
-        // Use optional chaining in case they are not added yet (though initializeForm should handle it)
-        const stockInput = document.getElementById('product-stock');
-        const stock = stockInput ? parseInt(stockInput.value) : 10;
+/**
+ * toggleNewCategoryInput - "New Category" input field-ஐ காட்ட/மறைக்க
+ */
+function toggleNewCategoryInput() {
+    const categorySelect = document.getElementById('category');
+    const newCategoryContainer = document.getElementById('new-category-container');
 
-        const categorySelect = document.getElementById('product-category');
-        let categoryId = categorySelect ? categorySelect.value : null;
+    if (categorySelect.value === 'new') {
+        newCategoryContainer.style.display = 'block';
+        document.getElementById('new-category-name').focus();
+    } else {
+        newCategoryContainer.style.display = 'none';
+    }
+}
+// Exporting to global scope for HTML inline call
+window.toggleNewCategoryInput = toggleNewCategoryInput;
 
-        const newCategoryInput = document.getElementById('new-category-name');
-        const newCategoryName = newCategoryInput ? newCategoryInput.value.trim() : '';
+// ===========================================
+// FORM HANDLING
+// ===========================================
 
-        // Get the files
-        const fileInput = document.getElementById('product-images');
-        const files = fileInput.files;
+/**
+ * setupAddProductForm - Form validation and submission setup
+ */
+function setupAddProductForm() {
+    const form = document.getElementById('add-product-form');
+    if (!form) return;
 
-        // Validation
-        if (!name || isNaN(price)) {
-            alert('Please fill in all required fields correctly.');
-            return;
+    // Image preview
+    const imageInput = document.getElementById('product-images');
+    imageInput.addEventListener('change', handleImagePreview);
+
+    // Form submit
+    form.addEventListener('submit', handleAddProductSubmit);
+}
+
+/**
+ * handleImagePreview - Image select பண்ணும்போது preview காட்டும்
+ */
+function handleImagePreview(e) {
+    const previewContainer = document.getElementById('image-preview');
+    previewContainer.innerHTML = ''; // Clear existing
+
+    const files = e.target.files;
+
+    if (files.length > 3) {
+        showModal('Maximum 3 images allowed', 'warning');
+        e.target.value = ''; // Clear selection
+        return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // Validate type
+        if (!file.type.startsWith('image/')) {
+            showModal('Please select valid image files', 'warning');
+            continue;
         }
 
-        if (files.length === 0) {
-            alert('Please select at least one image.');
-            return;
-        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.style.width = '80px';
+            img.style.height = '80px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '5px';
+            img.style.border = '1px solid #ddd';
+            previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    }
+}
 
-        // Additional Frontend Validation for Image Types
-        for (let i = 0; i < files.length; i++) {
-            if (!files[i].type.startsWith('image/')) {
-                alert(`File "${files[i].name}" is not a valid image.`);
+/**
+ * handleAddProductSubmit - Form submission handle பண்ணும்
+ */
+async function handleAddProductSubmit(e) {
+    e.preventDefault();
+
+    try {
+        showLoading('Uploading product...');
+
+        // 1. Get Form Data
+        const name = document.getElementById('name').value.trim();
+        let categoryId = document.getElementById('category').value;
+        const description = document.getElementById('description').value.trim();
+        const price = parseFloat(document.getElementById('price').value);
+        const stock = parseInt(document.getElementById('stock').value);
+        const imageFiles = document.getElementById('product-images').files;
+
+        // 2. Handle New Category Creation
+        if (categoryId === 'new') {
+            const newCategoryName = document.getElementById('new-category-name').value.trim();
+            if (!newCategoryName) {
+                hideLoading();
+                showModal('Please enter a name for the new category', 'warning');
+                return;
+            }
+
+            try {
+                // Create new category via API
+                // Assuming createCategory returns object with category_id
+                const newCat = await createCategory(newCategoryName, "User created category");
+                categoryId = newCat.category_id; // Use the new ID
+            } catch (catError) {
+                hideLoading();
+                showModal('Failed to create new category. Please try again.', 'error');
                 return;
             }
         }
 
-        const originalText = submitBtn.textContent;
-        submitBtn.disabled = true;
+        // Convert to integer (backend expects integer)
+        categoryId = parseInt(categoryId);
 
-        try {
-            // 1. Upload Images to Cloudinary one by one (since bulk is missing on Render)
-            const imageUrls = [];
-            for (let i = 0; i < Math.min(files.length, 3); i++) { // Limit to 3 images as per deployed schema
-                submitBtn.textContent = `Uploading Image ${i + 1}/${Math.min(files.length, 3)}...`;
-
-                const formData = new FormData();
-                formData.append('file', files[i]); // Render expects 'file' for single upload
-
-                console.log('Uploading image to:', API_CONFIG.UPLOAD.IMAGE);
-                const uploadRes = await apiPostFormData(API_CONFIG.UPLOAD.IMAGE, formData);
-
-                if (uploadRes && uploadRes.url) {
-                    imageUrls.push(uploadRes.url);
-                }
-            }
-
-            if (imageUrls.length === 0) {
-                throw new Error('No images were successfully uploaded.');
-            }
-
-            // 2. Create Category (if needed)
-            if (categoryId === 'new') {
-                if (!newCategoryName) {
-                    throw new Error('Please enter a name for the new category');
-                }
-
-                submitBtn.textContent = 'Creating Category...';
-                const newCat = await apiPost(API_CONFIG.CATEGORIES.BASE, {
-                    name: newCategoryName,
-                    description: `Category for ${newCategoryName}`
-                });
-                categoryId = newCat.category_id || newCat.id;
-            }
-
-            // 3. Create Product with Image URLs mapping to Render schema
-            submitBtn.textContent = 'Creating Product...';
-            const productData = {
-                name: name,
-                description: description,
-                price: price,
-                stock_quantity: stock,
-                category_id: categoryId ? parseInt(categoryId) : null,
-                image_url: imageUrls[0] || null,
-                image_url_2: imageUrls[1] || null,
-                image_url_3: imageUrls[2] || null
-            };
-
-            await apiPost(API_CONFIG.PRODUCTS.BASE, productData);
-
-            submitBtn.textContent = 'Success!';
-            submitBtn.style.backgroundColor = '#4caf50';
-
-            setTimeout(() => {
-                alert('Product created successfully!');
-                window.location.href = 'seller_dashboard.html';
-            }, 1000);
-
-        } catch (error) {
-            console.error('Error creating product:', error);
-            alert(error.message || 'Failed to create product');
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
+        // 3. Validate
+        if (imageFiles.length === 0) {
+            hideLoading();
+            showModal('Please select at least one image', 'warning');
+            return;
         }
-    });
-});
+
+        // 4. Upload Images first
+        const uploadedImageUrls = await uploadImages(imageFiles);
+
+        if (!uploadedImageUrls || uploadedImageUrls.length === 0) {
+            hideLoading();
+            showModal('Image upload failed. Please try again.', 'error');
+            return;
+        }
+
+        // 5. Create Product Data
+        const productData = {
+            name: name,
+            category_id: categoryId, // Backend expects category_id (snake_case)
+            description: description, // Matches backend Pydantic model
+            price: price,
+            stock_quantity: stock, // Matches backend Pydantic model
+            image_url: uploadedImageUrls[0], // Main image
+            // Handles multiple images
+            image_url_2: uploadedImageUrls[1] || null,
+            image_url_3: uploadedImageUrls[2] || null
+        };
+
+        // 6. Send to Backend
+        const result = await createProduct(productData);
+
+        hideLoading();
+
+        if (result) {
+            showModal('Product added successfully! 🎉', 'success');
+
+            // Wait and redirect to dashboard
+            setTimeout(() => {
+                window.location.href = 'seller_dashboard.html';
+            }, 2000);
+        }
+
+    } catch (error) {
+        hideLoading();
+        console.error('Add product error:', error);
+        showModal(error.detail || error.message || 'Failed to add product', 'error');
+    }
+}
 
 /**
- * Dynamically add Stock, Category if missing
+ * uploadImages - Helper to upload multiple images
+ * @param {FileList} files 
+ * @returns {Promise<Array>} Array of image URLs
  */
-async function addMissingFields(form, submitBtn) {
-    // Stock Field
-    if (!document.getElementById('product-stock')) {
-        const stockGroup = document.createElement('div');
-        stockGroup.className = 'form-group';
-        stockGroup.innerHTML = `
-            <label for="product-stock">Stock Quantity</label>
-            <input type="number" id="product-stock" name="product-stock" required min="1" value="10">
-        `;
-        form.insertBefore(stockGroup, submitBtn.closest('.form-group') || submitBtn);
-    }
+async function uploadImages(files) {
+    const urls = [];
 
-    // Category Field (Dropdown + New Category Option)
-    if (!document.getElementById('product-category')) {
-        const catGroup = document.createElement('div');
-        catGroup.className = 'form-group';
-
-        let categories = PRODUCT_CATEGORIES;
+    // Upload files one by one using api.js uploadImage function
+    for (let i = 0; i < files.length; i++) {
         try {
-            const apiCategories = await apiGet(API_CONFIG.CATEGORIES.BASE);
-            if (apiCategories && apiCategories.length > 0) {
-                categories = apiCategories;
+            // uploadImage expects a File object
+            const response = await uploadImage(files[i]);
+
+            if (response && response.url) {
+                urls.push(response.url);
+            } else if (typeof response === 'string') {
+                urls.push(response);
             }
-        } catch (e) {
-            console.warn('Using default categories');
+        } catch (error) {
+            console.error(`Failed to upload image ${i + 1}:`, error);
         }
-
-        const options = categories.map(cat =>
-            `<option value="${cat.category_id || cat.id}">${cat.name}</option>`
-        ).join('');
-
-        catGroup.innerHTML = `
-            <label for="product-category">Category</label>
-            <select id="product-category" name="product-category" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; font-size: 1rem; margin-bottom: 10px;">
-                <option value="">-- Select a Category --</option>
-                ${options}
-                <option value="new" style="background: #e8f5e9; font-weight: bold; color: #2e7d32;">+ Create New Category</option>
-            </select>
-            <div id="new-category-input-container" style="display: none; transition: all 0.3s ease;">
-                <label for="new-category-name" style="font-size: 0.85em; color: #2e7d32;">New Category Name</label>
-                <input type="text" id="new-category-name" name="new-category-name" placeholder="Enter new category name (e.g. Organic Fertilizers)" style="width: 100%; padding: 10px; border: 2px solid #2e7d32; border-radius: 8px;">
-            </div>
-        `;
-        form.insertBefore(catGroup, submitBtn.closest('.form-group') || submitBtn);
-
-        // Toggle new category input
-        const catSelect = document.getElementById('product-category');
-        const newCatContainer = document.getElementById('new-category-input-container');
-        catSelect.addEventListener('change', function () {
-            if (this.value === 'new') {
-                newCatContainer.style.display = 'block';
-                document.getElementById('new-category-name').focus();
-            } else {
-                newCatContainer.style.display = 'none';
-            }
-        });
     }
+
+    return urls;
+}
+
+// ===========================================
+// AUTO-INITIALIZATION
+// ===========================================
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAddProductPage);
+} else {
+    initAddProductPage();
 }

@@ -7,11 +7,11 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     min-height: 100vh;
     position: relative;
     overflow-x: hidden;
+    overflow-y: auto;
 }
 
 body::before {
@@ -37,8 +37,8 @@ body::before {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     width: 90%;
     max-width: 550px;
-    margin: 120px 0 40px;
-    /* Increased top margin for header */
+    margin: 40px auto;
+    /* Centered with top/bottom margin */
     text-align: center;
     animation: fadeIn 0.8s ease-out;
 }

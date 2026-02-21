@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Seller Dashboard - UZHAVAN PLANET</title>
     <meta name="description" content="Manage your seller account, view orders, and track your sales on UZHAVAN PLANET">
+    <link rel="stylesheet" href="../css/common_ui.css" />
     <link rel="stylesheet" href="../css/seller_dashboard.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -16,9 +17,9 @@
 
     <header>
         <div class="top-bar">
-            <div class="logo" style="align-items: center;display: flex; gap: 20px;">
-                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo" height="30px"> <strong>UZHAVAN
-                    PLANET</strong>
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
+                <strong>UZHAVAN PLANET</strong>
             </div>
             <div class="search-bar">
                 <input type="text" placeholder="Search orders, products ....">
@@ -34,11 +35,10 @@
             <a href="../index.html">Home</a>
             <a href="./products_page.html">Shop All</a>
             <a href="./About_page.html">About Us</a>
-            <a href="./categories.html">Brands</a>
             <a href="./best_selling_page.html">Best Sellers</a>
             <a href="./feedback.html">Feedback</a>
             <a href="./report.html">Support</a>
-            <a href="./seller_dashboard.html" class="active">Seller Dashboard</a>
+            <a href="./seller_dashboard.html" class="active">Profile</a>
         </nav>
     </header>
 
@@ -107,7 +107,7 @@
                 </div>
                 <div class="stat-info">
                     <h3>Total Orders</h3>
-                    <p class="stat-number">248</p>
+                    <p class="stat-number" id="total-orders">248</p>
                     <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 12% this month</span>
                 </div>
             </div>
@@ -118,7 +118,7 @@
                 </div>
                 <div class="stat-info">
                     <h3>Pending Orders</h3>
-                    <p class="stat-number">15</p>
+                    <p class="stat-number" id="pending-orders">15</p>
                     <span class="stat-change neutral">Needs attention</span>
                 </div>
             </div>
@@ -129,7 +129,7 @@
                 </div>
                 <div class="stat-info">
                     <h3>Total Revenue</h3>
-                    <p class="stat-number">₹1,24,500</p>
+                    <p class="stat-number" id="total-revenue">₹1,24,500</p>
                     <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 8% this month</span>
                 </div>
             </div>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="stat-info">
                     <h3>Products Listed</h3>
-                    <p class="stat-number">42</p>
+                    <p class="stat-number" id="total-products">42</p>
                     <span class="stat-change positive"><i class="fas fa-arrow-up"></i> 5 new</span>
                 </div>
             </div>
@@ -159,6 +159,29 @@
             <div class="products-grid-dashboard" id="sellerProductsGrid">
                 <!-- Dynamic Products -->
                 <p style="padding: 20px; text-align: center;">Loading products...</p>
+            </div>
+        </div>
+
+        <!-- Order Details Modal -->
+        <div id="orderModal" class="modal"
+            style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; justify-content: center; align-items: center;">
+            <div class="modal-content"
+                style="background: white; padding: 30px; border-radius: 15px; width: 500px; max-width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3><i class="fas fa-info-circle"></i> Order Details</h3>
+                    <button onclick="closeOrderModal()"
+                        style="border: none; background: transparent; font-size: 1.5rem; cursor: pointer; color: #666;">&times;</button>
+                </div>
+
+                <div id="orderModalContent">
+                    <!-- Dynamic Order Details Go Here -->
+                    <p>Loading details...</p>
+                </div>
+
+                <div style="margin-top: 25px; text-align: right;">
+                    <button onclick="closeOrderModal()"
+                        style="padding: 10px 25px; border: 1px solid #ddd; border-radius: 8px; background: #f5f5f5; cursor: pointer; font-weight: bold;">Close</button>
+                </div>
             </div>
         </div>
 
@@ -193,11 +216,12 @@
                 <div class="filter-controls">
                     <select id="orderFilter" class="filter-select">
                         <option value="all">All Orders</option>
-                        <option value="pending">Pending</option>
+                        <option value="confirmed">Confirmed</option>
                         <option value="processing">Processing</option>
                         <option value="shipped">Shipped</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="near by">Near By</option>
+                        <option value="delivery zone">Delivery Zone</option>
+                        <option value="completed">Completed</option>
                     </select>
                     <input type="text" placeholder="Search orders..." class="search-input" id="orderSearch">
                 </div>
@@ -250,7 +274,7 @@
         <div class="quick-actions-section">
             <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
             <div class="actions-grid">
-                <button class="action-card">
+                <button class="action-card" onclick="window.location.href='product_adding_page.html'">
                     <i class="fas fa-plus-circle"></i>
                     <span>Add New Product</span>
                 </button>
@@ -285,9 +309,7 @@
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="./categories.html">Brands</a></li>
                     <li><a href="./products_page.html">Seed Collection</a></li>
-                    <li><a href="./categories.html">Crop Protection</a></li>
                     <li><a href="./products_page.html">Fruits & Vegetables</a></li>
                     <li><a href="./Track.html">Track Order</a></li>
                     <li><a href="./About_page.html">About Us Our Story</a></li>
@@ -321,10 +343,13 @@
     </footer>
 
     <!-- JavaScript Files -->
+    <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
-    <script src="../js/auth.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/api.js"></script>
-    <script src="../js/seller-dashboard.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/seller_dashboard.js"></script>
 
 </body>
 

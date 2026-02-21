@@ -1,172 +1,153 @@
-/**
- * Address Page Logic
- * Handles capturing shipping details and saving them before checkout review
- */
+// ===================================================
+// ADDRESS-LOGIC.JS - Shipping Address Page Logic
+// ===================================================
 
-document.addEventListener('DOMContentLoaded', async function () {
-    // Check authentication
-    if (!requireAuth()) return;
+// ===========================================
+// PAGE INITIALIZATION
+// ===========================================
 
-    const addressForm = document.getElementById('address-form');
-    const savedAddressContainer = document.getElementById('saved-address-container');
-    const savedAddressDisplay = document.getElementById('saved-address-display');
-    const useSavedBtn = document.getElementById('use-saved-btn');
+async function initAddressPage() {
+    console.log('🚚 Initializing address page...');
 
-    // Get the most up-to-date user data from API
-    let user = getUser();
+    // Login check
+    if (!requireAuth()) {
+        return;
+    }
+
     try {
-        const freshUser = await apiGet(API_CONFIG.AUTH.ME);
-        if (freshUser) {
-            user = freshUser;
-            saveUser(user); // Update local storage
-        }
-    } catch (err) {
-        console.warn('Could not fetch fresh user data, using cached.', err);
-    }
+        showLoading('Loading shipping details...');
 
-    // Handle Saved Address Display
-    if (user && user.address && user.address.trim() !== '') {
-        if (savedAddressContainer && savedAddressDisplay) {
-            savedAddressContainer.style.display = 'block';
-            savedAddressDisplay.innerHTML = `
-                <div style="display: flex; align-items: flex-start; gap: 10px;">
-                    <i class="fas fa-map-marker-alt" style="color: #2e7d32; margin-top: 5px;"></i>
-                    <div>
-                        <strong>${user.username}</strong><br>
-                        ${user.address}<br>
-                        <strong>Phone:</strong> ${user.phone || 'Not provided'}
-                    </div>
-                </div>
-            `;
-        }
-    }
+        // 1. Check if user already has an address
+        const profile = await getUserProfile();
 
-    // Pre-fill form (partial attempt)
-    if (user) {
-        // Splitting by space for name if possible
-        const nameParts = user.username ? user.username.split(' ') : ['', ''];
-        if (document.getElementById('first_name')) document.getElementById('first_name').value = nameParts[0] || '';
-        if (document.getElementById('last_name')) document.getElementById('last_name').value = nameParts.slice(1).join(' ') || '';
+        if (profile && profile.address && profile.address.trim() !== "") {
+            // Display saved address container
+            const savedContainer = document.getElementById('saved-address-container');
+            const savedDisplay = document.getElementById('saved-address-display');
 
-        if (document.getElementById('phone_number')) document.getElementById('phone_number').value = user.phone || '';
+            if (savedContainer && savedDisplay) {
+                savedContainer.style.display = 'block';
+                savedDisplay.innerHTML = `
+                    <strong>${profile.username}</strong><br>
+                    ${profile.address}<br>
+                    Phone: ${profile.phone || 'Not provided'}
+                `;
 
-        // Try to parse address fields if it follows the format: "Street, City, State, Country - Zip"
-        if (user.address) {
-            const parts = user.address.split(',').map(p => p.trim());
-            if (parts.length >= 2) {
-                if (document.getElementById('street_address')) document.getElementById('street_address').value = parts[0];
-                if (document.getElementById('city')) document.getElementById('city').value = parts[1];
-
-                // If there are more parts, try to fill state
-                if (parts.length >= 3) {
-                    const statePart = parts[2];
-                    if (document.getElementById('state')) document.getElementById('state').value = statePart;
-                }
-
-                // Handle Zip Code if it's in the last part with a hyphen
-                const lastPart = parts[parts.length - 1];
-                if (lastPart.includes('-')) {
-                    const zipParts = lastPart.split('-').map(p => p.trim());
-                    if (zipParts.length > 1 && document.getElementById('zip_code')) {
-                        document.getElementById('zip_code').value = zipParts[zipParts.length - 1];
-                    }
-                }
-            } else {
-                // fallback to just putting it in street if it's not comma separated
-                if (document.getElementById('street_address')) document.getElementById('street_address').value = user.address;
-            }
-        }
-    }
-
-    // Use Saved Address Button
-    if (useSavedBtn) {
-        useSavedBtn.addEventListener('click', function () {
-            const nameParts = user.username ? user.username.split(' ') : ['User', ''];
-
-            const addressData = {
-                firstName: nameParts[0],
-                lastName: nameParts.slice(1).join(' ') || 'User',
-                street: user.address,
-                phone: user.phone || ''
-            };
-
-            sessionStorage.setItem('temp_shipping_address', JSON.stringify(addressData));
-            sessionStorage.setItem('temp_full_address_string', user.address);
-
-            // Redirect directly to review
-            window.location.href = 'checkout_review.html';
-        });
-    }
-
-    if (addressForm) {
-        addressForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const submitBtn = addressForm.querySelector('.continue-button');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Saving...';
-
-            // Gather data
-            const addressData = {
-                firstName: document.getElementById('first_name').value,
-                lastName: document.getElementById('last_name').value,
-                street: document.getElementById('street_address').value,
-                apartment: document.getElementById('apartment').value,
-                city: document.getElementById('city').value,
-                state: document.getElementById('state').value,
-                country: document.getElementById('country').value,
-                zip: document.getElementById('zip_code').value,
-                phone: document.getElementById('phone_number').value
-            };
-
-            // Format full address string
-            const fullAddressString = `${addressData.street}${addressData.apartment ? ', ' + addressData.apartment : ''}, ${addressData.city}, ${addressData.state}, ${addressData.country} - ${addressData.zip}`;
-
-            // Save for the review page
-            sessionStorage.setItem('temp_shipping_address', JSON.stringify(addressData));
-            sessionStorage.setItem('temp_full_address_string', fullAddressString);
-
-            // Optionally save to profile
-            if (document.getElementById('save_address').checked) {
-                // Normalize addresses for comparison (remove extra spaces, lowercase)
-                const normalizeAddress = (addr) => {
-                    return addr ? addr.trim().toLowerCase().replace(/\s+/g, ' ') : '';
+                // Setup use saved button
+                document.getElementById('use-saved-btn').onclick = () => {
+                    useSavedAddress(profile);
                 };
-
-                const currentAddress = normalizeAddress(user.address || '');
-                const newAddress = normalizeAddress(fullAddressString);
-                const currentPhone = (user.phone || '').trim();
-                const newPhone = (addressData.phone || '').trim();
-
-                // Only update if something ACTUALLY changed
-                const addressChanged = newAddress !== currentAddress;
-                const phoneChanged = newPhone !== currentPhone;
-
-                if (addressChanged || phoneChanged) {
-                    try {
-                        console.log('Address changed:', addressChanged, 'Phone changed:', phoneChanged);
-
-                        await apiPut(API_CONFIG.AUTH.ME, {
-                            address: fullAddressString,
-                            phone: addressData.phone
-                        });
-
-                        // Update local user object
-                        const updatedUser = { ...user, address: fullAddressString, phone: addressData.phone };
-                        saveUser(updatedUser);
-
-                        console.log('Profile updated successfully');
-                    } catch (err) {
-                        console.error('Failed to save address to profile:', err);
-                        alert('Warning: Could not save address to profile. But order will proceed.');
-                    }
-                } else {
-                    console.log('No changes detected - skipping profile update');
-                }
             }
 
-            // Redirect to review page
-            window.location.href = 'checkout_review.html';
-        });
+            // Pre-fill form just in case they want to edit it
+            fillAddressForm(profile);
+        }
+
+        // 2. Setup form submission
+        setupAddressForm();
+
+        hideLoading();
+
+    } catch (error) {
+        hideLoading();
+        console.error('Error loading address page:', error);
     }
-});
+}
+
+// ===========================================
+// ACTIONS
+// ===========================================
+
+/**
+ * useSavedAddress - User-ோட profile-ல இருக்குற address-ஐ use பண்ணும்
+ */
+function useSavedAddress(profile) {
+    const addressData = {
+        fullName: profile.username,
+        address: profile.address,
+        phone: profile.phone
+    };
+
+    // Session storage-ல save பண்ணி checkout-க்கு அனுப்புறோம்
+    sessionStorage.setItem('checkoutAddress', JSON.stringify(addressData));
+
+    window.location.href = './checkout_review.html';
+}
+
+/**
+ * fillAddressForm - Form-ஐ pre-fill பண்ணும்
+ */
+function fillAddressForm(profile) {
+    // Basic fill logic - since backend address is one string, we might need to split it 
+    // or just put it in street_address
+    document.getElementById('first_name').value = profile.username.split(' ')[0] || '';
+    document.getElementById('last_name').value = profile.username.split(' ').slice(1).join(' ') || '';
+    document.getElementById('street_address').value = profile.address || '';
+    document.getElementById('phone_number').value = profile.phone || '';
+}
+
+/**
+ * setupAddressForm - Form submission setup
+ */
+function setupAddressForm() {
+    const form = document.getElementById('address-form');
+    if (!form) return;
+
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        const firstName = document.getElementById('first_name').value.trim();
+        const lastName = document.getElementById('last_name').value.trim();
+        const street = document.getElementById('street_address').value.trim();
+        const apartment = document.getElementById('apartment').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const state = document.getElementById('state').value.trim();
+        const zip = document.getElementById('zip_code').value.trim();
+        const phone = document.getElementById('phone_number').value.trim();
+        const saveToProfile = document.getElementById('save_address').checked;
+
+        const fullAddress = `${street}${apartment ? ', ' + apartment : ''}, ${city}, ${state} - ${zip}`;
+        const fullName = `${firstName} ${lastName}`;
+
+        const addressData = {
+            fullName: fullName,
+            address: fullAddress,
+            phone: phone
+        };
+
+        try {
+            if (saveToProfile) {
+                showLoading('Updating profile address...');
+                // Username-a mathama, address and phone-a mattum update panrom
+                // username: fullName - ithai remove panniten to avoid 'Username already taken' error
+                await updateUserProfile({
+                    address: fullAddress,
+                    phone: phone
+                });
+                hideLoading();
+            }
+
+            // Session storage-ல save பண்ணுறோம் (Checkout review page-ku thevai)
+            sessionStorage.setItem('checkoutAddress', JSON.stringify(addressData));
+
+            window.location.href = './checkout_review.html';
+
+        } catch (error) {
+            hideLoading();
+            console.error('Failed to save address:', error);
+            showModal('Failed to save address details', 'error');
+        }
+    };
+}
+
+// ===========================================
+// AUTO-INITIALIZATION
+// ===========================================
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAddressPage);
+} else {
+    initAddressPage();
+}
+
+console.log('✅ Address Logic Loaded');

@@ -9,44 +9,264 @@
     <link rel="stylesheet" href="../css/cart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        .review-section {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
+        :root {
+            --primary-green: #1b5e20;
+            --secondary-green: #2e7d32;
+            --mint-bg: #f1f8e9;
+            --accent-yellow: #ffca28;
+            --text-dark: #3e2723;
+            --text-muted: #795548;
+            --glass-white: rgba(255, 255, 255, 0.9);
         }
 
-        .review-title {
-            font-weight: 600;
-            color: #2e7d32;
-            margin-bottom: 15px;
+        body {
+            background-color: #fdfbf7;
+            background-image: radial-gradient(var(--mint-bg) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .review-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .review-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(46, 125, 50, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .review-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .review-header h1 {
+            font-size: 2rem;
+            color: var(--primary-green);
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .review-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .review-section {
+            background: #fff;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid #eef2eb;
+            transition: transform 0.3s ease;
+        }
+
+        .review-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            gap: 12px;
         }
 
-        .address-box {
-            color: #555;
-            font-size: 0.95em;
+        .section-title i {
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+        }
+
+        .address-content {
+            font-size: 0.95rem;
             line-height: 1.6;
+            color: var(--text-dark);
         }
 
-        .item-list-mini {
-            width: 100%;
+        .edit-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--secondary-green);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            transition: color 0.2s;
         }
 
-        .mini-item {
+        .edit-link:hover {
+            color: var(--primary-green);
+        }
+
+        .order-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f4ee;
+        }
+
+        .item-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #f5f5f5;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .item-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .item-price {
+            font-weight: 700;
+            color: var(--secondary-green);
+            font-size: 1rem;
+        }
+
+        .payment-box {
+            background: #f1f8e9;
+            padding: 16px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #dcedc8;
+        }
+
+        .payment-box i {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+        }
+
+        .summary-box {
+            background: var(--primary-green);
+            color: #fff;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .total-row {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #f9f9f9;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: 500;
         }
 
-        .mini-item:last-child {
-            border-bottom: none;
+        .total-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent-yellow);
+        }
+
+        .terms-text {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        .action-btns {
+            display: grid;
+            grid-template-columns: 0.4fr 1fr;
+            gap: 16px;
+        }
+
+        .btn-back {
+            padding: 16px;
+            border-radius: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: transparent;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        .btn-place-order {
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            background: var(--accent-yellow);
+            color: var(--primary-green);
+            font-weight: 800;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(255, 202, 40, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+        }
+
+        .btn-place-order:hover {
+            background: #ffca28;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 202, 40, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            .review-card {
+                padding: 24px;
+            }
+
+            .action-btns {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-back {
+                order: 2;
+            }
         }
     </style>
 </head>
@@ -61,74 +281,73 @@
                 <strong>UZHAVAN PLANET</strong>
             </a>
         </div>
-        <div class="user-info" style="display: flex; gap: 15px;">
-            <a href="address.html" style="text-decoration: none; color: #2e7d32; font-weight: 500;"><i
-                    class="fas fa-chevron-left"></i> Back</a>
-            <a href="../index.html" style="text-decoration: none; color: #2e7d32; font-weight: 500;"><i
-                    class="fas fa-home"></i> Home</a>
-            <span style="color: #888; margin-left: 10px;">Checkout Process</span>
+        <div class="user-info">
+            <a href="address.html"><i class="fas fa-arrow-left"></i> Change Address</a>
         </div>
     </header>
 
-    <main class="cart-container" style="max-width: 800px;">
-        <div class="cart-title-section">
-            <h1>REVIEW ORDER <i class="fas fa-clipboard-check"></i></h1>
-            <p>Please check your details before placing the order.</p>
-        </div>
-
-        <div class="review-section">
-            <h2 class="review-title"><i class="fas fa-truck"></i> Shipping Address</h2>
-            <div class="address-box" id="display-address">
-                Loading address...
+    <main class="review-container">
+        <div class="review-card">
+            <div class="review-header">
+                <h1>Confirm Your Order</h1>
+                <p>One last step to get your fresh products!</p>
             </div>
-            <a href="address.html"
-                style="font-size: 0.8em; color: #2e7d32; text-decoration: none; display: block; margin-top: 10px;">Edit
-                Address</a>
-        </div>
 
-        <div class="review-section">
-            <h2 class="review-title"><i class="fas fa-shopping-basket"></i> Order Summary</h2>
-            <div id="order-items-review" class="item-list-mini">
-                Loading items...
-            </div>
-        </div>
-
-        <div class="review-section">
-            <h2 class="review-title"><i class="fas fa-money-bill-wave"></i> Payment Method</h2>
-            <div class="payment-method-box"
-                style="padding: 10px; border: 1px solid #e8f5e9; background: #f1f8e9; border-radius: 8px;">
-                <p style="margin: 0; font-weight: 600; color: #1b5e20;">
-                    <i class="fas fa-truck"></i> CASH ON DELIVERY (COD)
-                </p>
-                <p style="font-size: 0.85em; color: #558b2f; margin-top: 5px;">Pay when you receive your order.</p>
-            </div>
-        </div>
-
-        <div class="cart-summary"
-            style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <div class="cart-total" style="font-size: 1.4em; border-bottom: none; margin-bottom: 15px;">
-                Total Amount: <span id="total-price" style="color: #2e7d32;">₹ 0.00</span>
-            </div>
-            <p style="font-size: 0.8em; color: #888; margin-bottom: 20px;">By clicking 'Place Order', you agree to our
-                terms and conditions.</p>
-
-            <div style="display: flex; gap: 15px;">
-                <a href="address.html" style="flex: 0.4; text-decoration: none;">
-                    <button type="button"
-                        style="width: 100%; padding: 15px; border-radius: 8px; border: 2px solid #ddd; background: white; color: #666; font-weight: 600; cursor: pointer;">
-                        <i class="fas fa-arrow-left"></i> BACK
-                    </button>
+            <div class="review-section">
+                <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> Delivery Address</h2>
+                <div class="address-content" id="display-address">
+                    <i class="fas fa-circle-notch fa-spin"></i> Loading address...
+                </div>
+                <a href="address.html" class="edit-link">
+                    <i class="fas fa-edit"></i> Change Address
                 </a>
-                <button class="buy-now-btn" id="place-order-btn"
-                    style="flex: 1; padding: 15px; font-size: 1.1em; letter-spacing: 1px; border-radius: 8px; border: none; cursor: pointer;">
-                    PLACE ORDER <i class="fas fa-arrow-right"></i>
-                </button>
+            </div>
+
+            <div class="review-section">
+                <h2 class="section-title"><i class="fas fa-box"></i> Order Items</h2>
+                <div id="order-items-review" class="order-items-list">
+                    <i class="fas fa-circle-notch fa-spin"></i> Loading items...
+                </div>
+            </div>
+
+            <div class="review-section">
+                <h2 class="section-title"><i class="fas fa-wallet"></i> Payment Method</h2>
+                <div class="payment-box">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <div>
+                        <p style="margin: 0; font-weight: 700;">Cash On Delivery (COD)</p>
+                        <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: var(--text-muted);">Pay when you receive
+                            the items</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <div class="total-row">
+                    <span>Order Total</span>
+                    <span id="total-price" class="total-price">₹ 0.00</span>
+                </div>
+
+                <p class="terms-text">By clicking 'Place Order', you agree to Uzhavan Planet's terms of service and
+                    privacy policy.</p>
+
+                <div class="action-btns">
+                    <button type="button" class="btn-back" onclick="window.location.href='address.html'">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-place-order" id="place-order-btn">
+                        PLACE ORDER <i class="fas fa-check-circle"></i>
+                    </button>
+                </div>
             </div>
         </div>
+    </main>
     </main>
 
     <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/checkout-review.js"></script>

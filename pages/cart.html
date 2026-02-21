@@ -5,91 +5,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart - Uzhavan Planet</title>
+    <link rel="stylesheet" href="../css/common_ui.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/cart.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
 
-    <header class="cart-header">
-        <div class="logo-area">
-            <a href="../index.html" style="display: flex; align-items: center; text-decoration: none; color: inherit;">
-                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo"
-                    style="height: 40px; border-radius: 50%; margin-right: 15px;">
+    <!-- Standard Header -->
+    <header>
+        <div class="top-bar">
+            <div class="logo">
+                <img src="../assets/images/logoooo.png" alt="Uzhavan Planet Logo">
                 <strong>UZHAVAN PLANET</strong>
-            </a>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search products ....">
+                <button>🔍</button>
+            </div>
+            <div class="user-links">
+                <a href="./login.html">👤 login</a>
+                <a href="./cart.html" class="active">🛒 cart</a>
+            </div>
         </div>
-        <div class="user-info">
-            <a href="login.html"><i class="fas fa-user-circle"></i> Account</a>
-            <a href="best_selling_page.html">Bestsellers</a>
-            <a href="cart.html">Your Cart <span class="badge">2</span></a>
-        </div>
-    </header>
 
-    <nav class="nav-menu">
-        <a href="../index.html">Home</a>
-        <a href="products_page.html">Shop All</a>
-        <a href="categories.html">Brands</a>
-        <a href="best_selling_page.html">Best Sellers</a>
-        <a href="About_page.html">About Us</a>
-        <a href="feedback.html">Feedback</a>
-        <a href="report.html">Support</a>
-        <a href="user_details.html">Profile</a>
-    </nav>
+        <nav class="nav-menu">
+            <a href="../index.html">Home</a>
+            <a href="./products_page.html">Shop All</a>
+            <a href="./About_page.html">About Us</a>
+            <a href="./best_selling_page.html">Best Sellers</a>
+            <a href="./feedback.html">Feedback</a>
+            <a href="./report.html">Support</a>
+            <a href="./user_details.html">Profile</a>
+        </nav>
+    </header>
     <main class="cart-container">
         <div class="cart-title-section">
             <h1>CART <i class="fas fa-shopping-bag"></i></h1>
             <p>Not ready to checkout? <a href="../index.html">Continue Shopping</a></p>
         </div>
 
-        <div class="cart-items-wrapper">
+        <div class="cart-content" style="display: flex; gap: 30px; align-items: flex-start;">
+            <div id="cart-items" style="flex: 2;">
+                <!-- Dynamic Cart Items -->
+                <p>Loading cart...</p>
+            </div>
 
-            <!-- Dynamic Cart Items -->
-            <p>Loading cart...</p>
-
+            <div id="cart-summary" class="summary-box"
+                style="flex: 1; min-width: 300px; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: none;">
+                <!-- Dynamic Cart Summary -->
+            </div>
         </div>
     </main>
 
     <section class="suggestions-section" style="display: none;">
         <!-- Hidden suggestions for now -->
     </section>
+    <!-- Standard Footer -->
     <section class="extended-footer">
         <div class="footer-grid">
             <div class="footer-col">
                 <h3>Uzhavan Planet</h3>
                 <p>Your one-stop shop for fresh, organic, and direct-from-farmer products. Empowering farmers,
-                    nourishing
-                    communities.</p>
+                    nourishing communities.</p>
             </div>
             <div class="footer-col">
                 <h3>Quick Links</h3>
                 <ul>
-                    <li><a href="categories.html">Brands</a></li>
-                    <li><a href="products_page.html">Organic Seeds</a></li>
-                    <li><a href="categories.html">Crop Protection</a></li>
-                    <li><a href="Track.html">Track Order</a></li>
-                    <li><a href="About_page.html">About Our Mission</a></li>
-                    <li><a href="report.html">Contact Us</a></li>
+                    <li><a href="./products_page.html">Seed Collection</a></li>
+                    <li><a href="./products_page.html">Fruits & Vegetables</a></li>
+                    <li><a href="./Track.html">Track Order</a></li>
+                    <li><a href="./About_page.html">About Us Our Story</a></li>
+                    <li><a href="./report.html">Contact Support</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h3>Ethula Fooder</h3>
+                <h3>Site Menu</h3>
                 <ul>
-                    <li><a href="categories.html">Cattle Feed</a></li>
-                    <li><a href="categories.html">Poultry Feed</a></li>
-                    <li><a href="categories.html">Fish Feed</a></li>
-                    <li><a href="categories.html">Organic Fodder</a></li>
-                    <li><a href="categories.html">Feed Supplements</a></li>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="./products_page.html">Shop All</a></li>
+                    <li><a href="./About_page.html">About Us</a></li>
+                    <li><a href="./best_selling_page.html">Best Sellers</a></li>
+                    <li><a href="./feedback.html">Feedback</a></li>
+                    <li><a href="./report.html">Support</a></li>
+                    <li><a href="./user_details.html">Profile</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h3>Connect With Us</h3>
                 <p>Follow us on social media for updates and offers!</p>
                 <div class="social-icons">
-                    <a href="https://facebook.com">Facebook</a> |
-                    <a href="https://instagram.com">Instagram</a> |
-                    <a href="https://twitter.com">Twitter</a>
+                    <a href="https://facebook.com" target="_blank">Facebook</a> |
+                    <a href="https://instagram.com" target="_blank">Instagram</a> |
+                    <a href="https://twitter.com" target="_blank">Twitter</a>
                 </div>
             </div>
         </div>
@@ -101,6 +110,8 @@
 
     <!-- JavaScript Files -->
     <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/common.js"></script>
     <script src="../js/auth.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/cart.js"></script>

@@ -22,71 +22,7 @@ a {
     transition: color 0.3s;
 }
 
-/* --- Header/Navbar --- */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 5%;
-    background-color: #f1f8e9;
-    /* Mint Header */
-    border-top: 5px solid #1b5e20;
-    box-shadow: 0 4px 20px rgba(46, 125, 50, 0.15);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #1b5e20;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.logo img {
-    height: 50px;
-    border-radius: 50%;
-    border: 2px solid #ffca28;
-}
-
-.navbar a {
-    margin: 0 20px;
-    font-size: 0.95rem;
-    color: #33691e;
-    font-weight: 600;
-    text-transform: uppercase;
-    position: relative;
-    padding: 5px 0;
-}
-
-.navbar a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 3px;
-    bottom: 0;
-    left: 0;
-    background-color: #ffca28;
-    transition: width 0.3s;
-}
-
-.navbar a:hover::after {
-    width: 100%;
-}
-
-.navbar a:hover {
-    color: #1b5e20;
-}
-
-.nav-icons i {
-    margin-left: 20px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: #1b5e20;
-}
+/* Standard UI Styles (Header/Footer) now loaded from common_ui.css */
 
 /* --- Hero --- */
 .hero-carousel {
@@ -155,45 +91,127 @@ a {
 }
 
 
-/* --- Product Grid --- */
-.product-section {
+/* --- Products Main Layout --- */
+.products-main-layout {
+    display: flex;
+    gap: 30px;
     padding: 20px 5%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* --- Sidebar --- */
+.sidebar {
+    width: 250px;
+    background: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
+    border: 1px solid #e0e0e0;
+}
+
+.filter-group {
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group h3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    color: #1b5e20;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.clear-btn {
+    font-size: 0.75rem;
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.filter-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 10px;
+}
+
+.filter-group select,
+.filter-group input {
+    padding: 10px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+    border-color: #10b981;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.price-inputs input {
+    width: 100%;
+}
+
+/* --- Products Content --- */
+.products-content {
+    flex: 1;
 }
 
 .section-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     margin-bottom: 30px;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e5e7eb;
 }
 
-.section-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
+.section-header h1 {
+    font-size: 1.8rem;
     color: #1b5e20;
+    font-weight: 800;
 }
 
-.see-all {
-    color: #2e7d32;
+.sort-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-box label {
+    font-size: 0.9rem;
     font-weight: 600;
-    border-bottom: 2px solid #ffca28;
+    color: #6b7280;
 }
 
-.category-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #3e2723;
-    margin-bottom: 25px;
-    padding-left: 10px;
-    border-left: 5px solid #ffca28;
-    text-transform: uppercase;
+.sort-box select {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
 }
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 30px;
 }
 
