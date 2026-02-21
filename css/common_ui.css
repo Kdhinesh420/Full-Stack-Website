@@ -114,7 +114,7 @@ header:hover {
     display: flex;
     gap: 20px;
     align-items: center;
-    
+
 }
 
 .user-links a {
@@ -249,19 +249,67 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .top-bar {
-        flex-direction: column;
-        padding: 20px;
+    header {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        top: 0;
     }
 
-    .nav-menu {
+    .top-bar {
+        padding: 10px 15px;
+        gap: 10px;
         flex-wrap: wrap;
-        gap: 15px;
-        padding: 10px;
+        /* Elements line up better */
+    }
+
+    .logo {
+        font-size: 1.1rem;
+        gap: 8px;
+    }
+
+    .logo img {
+        height: 30px;
+        width: 30px;
     }
 
     .search-bar {
         width: 100%;
         order: 3;
+        /* Search always goes below logo/links */
+        padding: 2px 12px;
+        margin: 5px 0;
+        flex: 0 1 100%;
+    }
+
+    .search-bar input {
+        padding: 6px;
+        font-size: 0.85rem;
+    }
+
+    .user-links {
+        gap: 8px;
+    }
+
+    .user-links a {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+
+    .nav-menu {
+        gap: 15px;
+        padding: 8px 10px;
+        overflow-x: auto;
+        /* Allow scrolling if too wide */
+        justify-content: flex-start;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-menu a {
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+        padding: 5px 0;
     }
 }

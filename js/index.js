@@ -29,6 +29,9 @@ async function initHomePage() {
         // Featured products load பண்ணுறோம்
         await loadFeaturedProducts();
 
+        // Best Selling products load பண்ணுறோம்
+        await loadBestSellingProducts();
+
         // Search functionality setup பண்ணுறோம்
         setupSearch();
 
@@ -174,19 +177,24 @@ async function loadFeaturedProducts() {
             </div>
         `;
 
-        // Backend-ல இருந்து products fetch பண்ணுறோம்
-        const products = await getAllProducts({ limit: 8 });
+        // Backend-la irunthu konjam adhigama products fetch panrom variety-kaga
+        const products = await getAllProducts({ limit: 50 });
 
         // Products render பண்ணுறோம்
         if (products && products.length > 0) {
             featuredGrid.innerHTML = '';
 
-            products.slice(0, 8).forEach(product => {
+            // ID padi newest first-a (mathum namma pool-la irunthu 8 items)
+            const newestProducts = products
+                .sort((a, b) => b.id - a.id)
+                .slice(0, 8);
+
+            newestProducts.forEach(product => {
                 const productCard = createProductCard(product);
                 featuredGrid.appendChild(productCard);
             });
 
-            console.log(`✅ Loaded ${products.length} featured products`);
+            console.log(`✅ Displaying ${newestProducts.length} newest products out of ${products.length} fetched`);
 
         } else {
             featuredGrid.innerHTML = `
@@ -242,23 +250,26 @@ async function loadBestSellingProducts() {
             </div>
         `;
 
-        // Backend-ல இருந்து best sellers fetch பண்ணுறோம்
-        const bestSellers = await getBestSellingProducts(8);
+        // Popular/Best selling logic (Pool-la irunthu random-a edukurom variety-kaga)
+        const allPool = await getAllProducts({ limit: 40 });
 
-        // Products render பண்ணுறோம்
-        if (bestSellers && bestSellers.length > 0) {
+        if (allPool && allPool.length > 0) {
             bestSellingGrid.innerHTML = '';
 
-            bestSellers.forEach(product => {
+            // Shuffle panni variety kaaturom
+            const shuffled = allPool.sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 8);
+
+            selected.forEach(product => {
                 const productCard = createProductCard(product);
                 bestSellingGrid.appendChild(productCard);
             });
 
-            console.log(`✅ Loaded ${bestSellers.length} best selling products`);
+            console.log(`✅ Loaded ${selected.length} products for variety section`);
 
         } else {
-            // Featured products-ஐ மறுபடியும் காட்டுறோம் (if no best sellers)
-            const fallbackProducts = await getAllProducts({ limit: 8 });
+            // Featured products-ஐ மறுபடியும் காட்டுறோம் (உதாரணத்துக்கு 8-வது item-ல இருந்து)
+            const fallbackProducts = await getAllProducts({ limit: 8, offset: 8 });
 
             if (fallbackProducts && fallbackProducts.length > 0) {
                 bestSellingGrid.innerHTML = '';

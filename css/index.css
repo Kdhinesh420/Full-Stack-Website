@@ -330,24 +330,6 @@ a {
 
 /* Responsiveness */
 @media (max-width: 768px) {
-  .top-bar {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .search-bar {
-    width: 90%;
-  }
-
-  .nav-menu {
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-
-  .slider h2 {
-    font-size: 2.5rem;
-  }
-
   .extended-footer {
     border-radius: 30px 30px 0 0;
     text-align: center;

@@ -28,7 +28,8 @@ async function initSellerDashboard() {
         // New: Filter setup (Beginner level code)
         setupOrderFilters();
 
-        // Add product form setup
+        // Profile elements setup
+        setupProfileActions();
         setupAddProductForm();
         setupStockModal();
 
@@ -106,11 +107,16 @@ async function loadSellerProfile() {
     try {
         const user = await getUserProfile();
 
-        if (!user) return;
+        if (!user) {
+            console.warn('No user profile found');
+            return;
+        }
+
+        console.log('👤 Mapping user profile for dashboard:', user);
 
         // Display basic info
-        setTextContent('sellerName', user.username);
-        setTextContent('sellerEmail', user.email);
+        setTextContent('sellerName', user.username || 'Seller');
+        setTextContent('sellerEmail', user.email || 'No email');
         setTextContent('sellerPhone', user.phone || 'Not provided');
         setTextContent('sellerAddress', user.address || 'Not provided');
 
@@ -119,6 +125,30 @@ async function loadSellerProfile() {
 
     } catch (error) {
         console.error('Failed to load seller profile:', error);
+    }
+}
+
+/**
+ * setupProfileActions - Profile related buttons setup
+ */
+function setupProfileActions() {
+    // Edit Profile button listener
+    const editBtn = document.getElementById('editProfileBtn');
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            window.location.href = './user_details.html';
+        });
+    }
+
+    // Avatar upload setup (optional placeholder for future)
+    const avatarBtn = document.getElementById('sellerAvatarBtn');
+    if (avatarBtn) {
+        avatarBtn.onclick = () => {
+            showModal('Profile picture can be changed in User Details page.', 'info');
+            setTimeout(() => {
+                window.location.href = './user_details.html';
+            }, 1500);
+        };
     }
 }
 

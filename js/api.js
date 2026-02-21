@@ -189,8 +189,10 @@ async function getAllProducts(filters = {}) {
         // Backend expects 'category_id' not 'category'
         if (filters.category) params.append('category_id', filters.category);
         if (filters.search) params.append('search', filters.search);
-        if (filters.min_price) params.append('min_price', filters.min_price);
-        if (filters.max_price) params.append('max_price', filters.max_price);
+        if (filters.min_price !== null && filters.min_price !== undefined) params.append('min_price', filters.min_price);
+        if (filters.max_price !== null && filters.max_price !== undefined) params.append('max_price', filters.max_price);
+        if (filters.limit) params.append('limit', filters.limit);
+        if (filters.offset) params.append('offset', filters.offset);
 
         if (params.toString()) {
             url += `?${params.toString()}`;

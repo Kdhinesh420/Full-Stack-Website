@@ -11,8 +11,9 @@ let allProducts = []; // எல்லா products-ம் store பண்ணு�
 let currentFilters = {
     category: null,
     search: null,
-    minPrice: null,
-    maxPrice: null
+    min_price: null,
+    max_price: null,
+    sort: 'newest' // Default sort
 };
 
 // ===========================================
@@ -145,7 +146,9 @@ async function loadProducts() {
         allProducts = await getAllProducts(currentFilters);
 
         // Products display பண்ணுறோம்
-        displayProducts(allProducts);
+        // Apply current sort before displaying
+        const sortedProducts = sortProductsList(allProducts, currentFilters.sort);
+        displayProducts(sortedProducts);
 
         console.log(`✅ Loaded ${allProducts.length} products`);
 
@@ -326,11 +329,17 @@ function setupFilters() {
     const maxPriceInput = document.getElementById('max-price');
 
     if (minPriceInput) {
-        minPriceInput.addEventListener('change', handlePriceChange);
+        minPriceInput.addEventListener('input', debounce(handlePriceChange, 800));
     }
 
     if (maxPriceInput) {
-        maxPriceInput.addEventListener('change', handlePriceChange);
+        maxPriceInput.addEventListener('input', debounce(handlePriceChange, 800));
+    }
+
+    // Side search input
+    const sideSearchInput = document.getElementById('side-search-input');
+    if (sideSearchInput) {
+        sideSearchInput.addEventListener('input', debounce(handleSearchChange, 500));
     }
 
     console.log('✅ Filters initialized');
@@ -374,8 +383,8 @@ function handlePriceChange() {
     const minPrice = document.getElementById('min-price')?.value;
     const maxPrice = document.getElementById('max-price')?.value;
 
-    currentFilters.minPrice = minPrice ? parseFloat(minPrice) : null;
-    currentFilters.maxPrice = maxPrice ? parseFloat(maxPrice) : null;
+    currentFilters.min_price = minPrice ? parseFloat(minPrice) : null;
+    currentFilters.max_price = maxPrice ? parseFloat(maxPrice) : null;
 
     loadProducts();
 }
@@ -387,8 +396,8 @@ function clearFilters() {
     currentFilters = {
         category: null,
         search: null,
-        minPrice: null,
-        maxPrice: null
+        min_price: null,
+        max_price: null
     };
 
     // Input fields clear பண்ணுறோம்
@@ -405,6 +414,46 @@ function clearFilters() {
     // Products reload பண்ணுறோம்
     loadProducts();
 }
+
+/**
+ * handleSortChange - Sort change aagum pothu call aagum
+ */
+function handleSortChange(sortType) {
+    currentFilters.sort = sortType;
+
+    // API-kku poga venam, irukira list-aiye sort panni display pannuvom
+    const sortedList = sortProductsList(allProducts, sortType);
+    displayProducts(sortedList);
+}
+
+/**
+ * sortProductsList - List-ai sort panna logic (Beginner friendly)
+ */
+function sortProductsList(list, sortType) {
+    if (!list || list.length === 0) return [];
+
+    // Original list-ai modify pannaama copy edukurom
+    let sorted = [...list];
+
+    if (sortType === 'price-low') {
+        // Low to High
+        sorted.sort((a, b) => a.price - b.price);
+    } else if (sortType === 'price-high') {
+        // High to Low
+        sorted.sort((a, b) => b.price - a.price);
+    } else if (sortType === 'newest') {
+        // ID val-ve vacha newest kandupidirom
+        sorted.sort((a, b) => b.id - a.id);
+    } else if (sortType === 'popular') {
+        // Popularity demo: Stock level high-a iruntha popular-nu vaikkarom
+        sorted.sort((a, b) => (b.stock_quantity || 0) - (a.stock_quantity || 0));
+    }
+
+    return sorted;
+}
+
+// Global scope-kku expose pannurom (HTML onchange logic-kaga)
+window.handleSortChange = handleSortChange;
 
 // ===========================================
 // HELPER FUNCTIONS
