@@ -11,7 +11,7 @@
 */
 
 // Backend API Base URL - இதை உங்க backend URL-க்கு மாத்துங்க
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "https://uzhavan-planet-frontend.onrender.com";
 
 // API Endpoints - எல்லா API routes-ம் இங்க define பண்ணியிருக்கேன்
 const API_ENDPOINTS = {
