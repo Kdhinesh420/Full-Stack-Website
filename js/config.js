@@ -1,16 +1,11 @@
 // ===================================================
 // CONFIG.JS - Configuration File
 // ===================================================
-// இந்த file-ல backend URL and app settings இருக்கும்
-// Beginner-friendly-ஆ எழுதியிருக்கேன்
 
 /* 
-    BACKEND_URL என்பது உங்க Python FastAPI backend run ஆகற address
-    Local development-க்கு: http://localhost:8000
-    Production-க்கு: உங்க deployed URL (e.g., Render, Heroku)
 */
 
-// Backend API Base URL - இதை உங்க backend URL-க்கு மாத்துங்க
+// Backend API Base URL - இதை உங்க backend URL-க்கு மாத்து
 const API_BASE_URL = "https://uzhavan-planet-frontend.onrender.com";
 
 // API Endpoints - எல்லா API routes-ம் இங்க define பண்ணியிருக்கேன்
@@ -97,14 +92,7 @@ const API_ENDPOINTS = {
 };
 
 // Product Categories - Products-ஐ categorize பண்ண
-const PRODUCT_CATEGORIES = [
-    { id: "seeds", name: "Seeds", icon: "🌱" },
-    { id: "fertilizers", name: "Fertilizers", icon: "🧪" },
-    { id: "pesticides", name: "Pesticides", icon: "🛡️" },
-    { id: "tools", name: "Tools & Equipment", icon: "🔧" },
-    { id: "organic", name: "Organic Products", icon: "🍃" },
-    { id: "fodder", name: "Animal Fodder", icon: "🐄" }
-];
+
 
 // App Settings
 const APP_CONFIG = {
