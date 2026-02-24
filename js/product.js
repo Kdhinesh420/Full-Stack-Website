@@ -49,10 +49,15 @@ async function initProductPage() {
  */
 async function loadProductDetails(productId) {
     try {
+        console.log(`🔍 Loading details for Product ID: ${productId}`);
         showLoading('Loading product details...');
 
         // API call
         currentProduct = await getProductById(productId);
+
+        if (!currentProduct) {
+            throw new Error('Product data is empty');
+        }
 
         hideLoading();
 
@@ -91,8 +96,14 @@ function displayProductDetails(product) {
     // Product category
     const categoryEl = document.getElementById('product-category');
     if (categoryEl) {
-        const category = PRODUCT_CATEGORIES.find(c => c.id === product.category);
-        categoryEl.textContent = category ? category.name : product.category;
+        // Backend-la 'category_name' direct-a varum, atha check panrom
+        // Illati local PRODUCT_CATEGORIES-la irunthu match panrom
+        const categoryLabel = product.category_name ||
+            (typeof PRODUCT_CATEGORIES !== 'undefined' ?
+                PRODUCT_CATEGORIES.find(c => c.id === product.category_id)?.name : null) ||
+            product.category || 'General';
+
+        categoryEl.textContent = categoryLabel;
     }
 
     // Stock status
